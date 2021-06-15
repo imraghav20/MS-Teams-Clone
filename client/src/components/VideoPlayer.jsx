@@ -1,15 +1,23 @@
 import React, { useContext } from 'react';
-import { Grid, Typography, Paper } from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { SocketContext } from '../SocketContext';
 
 const useStyles = makeStyles((theme) => ({
     video: {
-        width: '550px',
+        width: '100vw',
+        height: '92vh',
         [theme.breakpoints.down('xs')]: {
             width: '300px',
         },
+    },
+    typography: {
+        zIndex:'1000',
+        position:'absolute',
+        left: '20vw',
+        background: '#6264a7',
+        padding: '5px 5px'
     },
     gridContainer: {
         justifyContent: 'center',
@@ -17,40 +25,30 @@ const useStyles = makeStyles((theme) => ({
             flexDirection: 'column',
         },
     },
-    paper: {
-        padding: '10px',
-        border: '2px solid black',
-        margin: '10px',
-    },
 }));
 
 const VideoPlayer = () => {
     const { name, callAccepted, myVideo, userVideo, callEnded, stream, call } = useContext(SocketContext);
     const classes = useStyles();
     return (
-        <Grid container className={classes.gridContainer}>
+        <Grid>
             {/* Our own video */}
             {
                 stream && (
-                    <Paper className={classes.paper}>
-                        <Grid item xs={12} md={6}>
-                            <Typography variant='h5' gutterBottom>{name || 'Name'}</Typography>
-                            <video playsInline muted ref={myVideo} autoPlay className={classes.video} />
-                        </Grid>
-                    </Paper>
+                    <Grid item xs={12} md={6}>
+                        <Typography className={classes.typography} variant='h5' gutterBottom>{name || 'Name'}</Typography>
+                        <video playsInline muted ref={myVideo} autoPlay className={classes.video} />
+                    </Grid>
                 )
             }
-
 
             {/* Other user's video */}
             {
                 callAccepted && !callEnded && (
-                    <Paper className={classes.paper}>
-                        <Grid item xs={12} md={6}>
-                            <Typography variant='h5' gutterBottom>{call.name || 'Name'}</Typography>
-                            <video playsInline ref={userVideo} autoPlay className={classes.video} />
-                        </Grid>
-                    </Paper>
+                    <Grid item xs={12} md={6}>
+                        <Typography className={classes.typography} variant='h5' gutterBottom>{call.name || 'Name'}</Typography>
+                        <video playsInline ref={userVideo} autoPlay className={classes.video} />
+                    </Grid>
                 )
             }
 
