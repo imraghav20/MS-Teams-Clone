@@ -1,46 +1,49 @@
 import React from 'react';
-import { Typography, AppBar } from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import ms_teams_logo_white from './assets/ms_teams_logo_white.png';
 
-import VideoPlayer from './components/VideoPlayer';
-import Notifications from './components/Notifications';
-import Options from './components/Options';
-import CallSettings from './components/CallSettings';
+import CallForm from './components/CallForm';
 
 const useStyles = makeStyles((theme) => ({
-    appBar: {
-        padding: '10px',
-        display: 'flex',
-        flexDirection: 'row',
-        width: '100%',
-        border: '2px solid black',
-        background: '#0a0a0a',
-
-        [theme.breakpoints.down('xs')]: {
-            width: '90%',
-        },
+    body: {
+        background: '#6264a7',
+        height: '100vh',
+        width: '100vw',
     },
-    wrapper: {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        width: '100%',
+    inner: {
+        position: 'absolute',
+        top: '50%',
+        transform: 'translateY(-50%)',
+        width: '100%'
     },
-}))
+    typography: {
+        color: '#ffffff'
+    }
+}));
 
 const App = () => {
     const classes = useStyles();
-
     return (
-        <div className={classes.wrapper}>
-            <AppBar className={classes.appBar} position="static">
-                <Typography variant="h6" align="center" fontFamily="Open Sans">Microsoft Teams Clone</Typography>
-            </AppBar>
-            <VideoPlayer />
-            <CallSettings />
-            <Options>
-                <Notifications />
-            </Options>
+        <div className={classes.body}>
+            <div className={classes.inner}>
+                <Grid container xs={12} direction='row'>
+                    <Grid container xs={6} direction='row'>
+                        <Grid item xs={5}>
+                            <img src={ms_teams_logo_white} />
+                        </Grid>
+                        <Grid container xs={7} direction='column' justify='center'>
+                            <Grid>
+                                <Typography variant='h3' className={classes.typography}>Microsoft Teams</Typography>
+                                <Typography variant='h3' className={classes.typography}>Clone</Typography>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                    <Grid container xs={6} direction='column' justify='center'>
+                        <CallForm/>
+                    </Grid>
+                </Grid>
+            </div>
         </div>
     );
 };
