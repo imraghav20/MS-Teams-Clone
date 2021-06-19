@@ -1,8 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { Button, TextField, Typography, Grid, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { Assignment, Phone } from '@material-ui/icons';
+import { Phone } from '@material-ui/icons';
 
 import { SocketContext } from '../SocketContext';
 
@@ -61,7 +60,7 @@ const CallForm = () => {
 
                         </Grid>
                         <Grid item xs={3}>
-                            <Button variant="contained" color="primary" startIcon={<Phone fontSize="large" />} className={classes.margin}>
+                            <Button variant="contained" color="primary" startIcon={<Phone fontSize="large" />} fullWidth className={classes.margin}>
                                 Start Call
                             </Button>
                         </Grid>
@@ -85,8 +84,8 @@ const CallForm = () => {
 
                         </Grid>
                         <Grid item xs={3}>
-                            <Button variant="contained" color="primary" startIcon={<Phone fontSize="large" />} className={classes.margin}>
-                                Start Call
+                            <Button variant="contained" color="primary" startIcon={<Phone fontSize="large" />} fullWidth className={classes.margin}>
+                                Join Call
                             </Button>
                         </Grid>
                     </Grid>
