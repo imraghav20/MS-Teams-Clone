@@ -49,22 +49,21 @@ const CallForm = () => {
     return (
         <div>
             <Paper elevation={10} className={classes.paper}>
+                <Typography variant='h5' align='center'>
+                    Start a Call
+                </Typography>
                 <form className={classes.root} noValidate autoComplete="off">
                     <Grid container direction='row' align='center' justify='center' alignItems='center'>
-                        <Grid item xs={5}>
+                        <Grid item xs={8}>
                             <TextField label='Name' required fullWidth />
+                        </Grid>
+                        <Grid item xs={1}>
+
                         </Grid>
                         <Grid item xs={3}>
                             <Button variant="contained" color="primary" startIcon={<Phone fontSize="large" />} className={classes.margin}>
                                 Start Call
                             </Button>
-                        </Grid>
-                        <Grid item xs={4}>
-                            <CopyToClipboard text="Hello" className={classes.margin}>
-                                <Button variant='contained' color='primary' startIcon={<Assignment fontSize="large" />}>
-                                    Copy Call ID
-                                </Button>
-                            </CopyToClipboard>
                         </Grid>
                     </Grid>
                 </form>
@@ -73,7 +72,11 @@ const CallForm = () => {
             <Typography variant='h6' align='center' className={classes.typography}>OR</Typography>
 
             <Paper elevation={10} className={classes.paper}>
+                <Typography variant='h5' align='center'>
+                    Join a Call
+                </Typography>
                 <form className={classes.root} noValidate autoComplete="off">
+                    <TextField label='Name' required fullWidth />
                     <Grid container direction='row' align='center' justify='center' alignItems='center'>
                         <Grid item xs={8}>
                             <TextField label='Call ID' required fullWidth />
