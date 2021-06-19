@@ -29,8 +29,10 @@ const App = () => {
             <div className={classes.inner}>
                 <Grid container xs={12} direction='row'>
                     <Grid container xs={6} direction='row'>
-                        <Grid item xs={5}>
-                            <img src={ms_teams_logo_white} />
+                        <Grid container xs={5} direction='column' justify='center'>
+                            <Grid>
+                                <img src={ms_teams_logo_white} />
+                            </Grid>
                         </Grid>
                         <Grid container xs={7} direction='column' justify='center'>
                             <Grid>
@@ -40,7 +42,7 @@ const App = () => {
                         </Grid>
                     </Grid>
                     <Grid container xs={6} direction='column' justify='center'>
-                        <CallForm/>
+                        <CallForm />
                     </Grid>
                 </Grid>
             </div>
