@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Button, TextField, Typography, Grid, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Phone } from '@material-ui/icons';
@@ -43,6 +44,8 @@ const useStyles = makeStyles((theme) => ({
 const CallForm = () => {
     // const { me, callAccepted, name, setName, callEnded, leaveCall, callUser } = useContext(SocketContext);
     // const [idToCall, setIdToCall] = useState('');
+    const [hostName, setHostName] = useState('');
+
     const classes = useStyles();
 
     return (
@@ -51,18 +54,23 @@ const CallForm = () => {
                 <Typography variant='h5' align='center'>
                     Start a Call
                 </Typography>
-                <form className={classes.root} noValidate autoComplete="off">
+                <form className={classes.root} autoComplete="off">
                     <Grid container direction='row' align='center' justify='center' alignItems='center'>
                         <Grid item xs={8}>
-                            <TextField label='Name' required fullWidth />
+                            <TextField label='Name' value={hostName} required fullWidth onChange={(e) => setHostName(e.target.value)} />
                         </Grid>
                         <Grid item xs={1}>
 
                         </Grid>
                         <Grid item xs={3}>
-                            <Button variant="contained" color="primary" startIcon={<Phone fontSize="large" />} fullWidth className={classes.margin}>
-                                Start Call
-                            </Button>
+                            <Link to={{
+                                pathname: "/video-call",
+                                state: { hostName: {hostName} }
+                            }}>
+                                <Button type='submit' variant="contained" color="primary" startIcon={<Phone fontSize="large" />} fullWidth className={classes.margin}>
+                                    Start Call
+                                </Button>
+                            </Link>
                         </Grid>
                     </Grid>
                 </form>
@@ -74,7 +82,7 @@ const CallForm = () => {
                 <Typography variant='h5' align='center'>
                     Join a Call
                 </Typography>
-                <form className={classes.root} noValidate autoComplete="off">
+                <form className={classes.root} autoComplete="off">
                     <TextField label='Name' required fullWidth />
                     <Grid container direction='row' align='center' justify='center' alignItems='center'>
                         <Grid item xs={8}>
@@ -84,7 +92,7 @@ const CallForm = () => {
 
                         </Grid>
                         <Grid item xs={3}>
-                            <Button variant="contained" color="primary" startIcon={<Phone fontSize="large" />} fullWidth className={classes.margin}>
+                            <Button type='submit' variant="contained" color="primary" startIcon={<Phone fontSize="large" />} fullWidth className={classes.margin}>
                                 Join Call
                             </Button>
                         </Grid>

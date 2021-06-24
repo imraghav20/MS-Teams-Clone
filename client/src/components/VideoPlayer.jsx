@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Grid, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -13,8 +14,8 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     typography: {
-        zIndex:'1000',
-        position:'absolute',
+        zIndex: '1000',
+        position: 'absolute',
         left: '20vw',
         background: '#6264a7',
         padding: '5px 5px'
@@ -29,6 +30,7 @@ const useStyles = makeStyles((theme) => ({
 
 const VideoPlayer = () => {
     const { name, callAccepted, myVideo, userVideo, callEnded, stream, call } = useContext(SocketContext);
+    const hostName = useLocation();
     const classes = useStyles();
     return (
         <Grid>
@@ -36,7 +38,7 @@ const VideoPlayer = () => {
             {
                 stream && (
                     <Grid item xs={12} md={6}>
-                        <Typography className={classes.typography} variant='h5' gutterBottom>{name || 'Name'}</Typography>
+                        <Typography className={classes.typography} variant='h5' gutterBottom>{hostName.state.hostName.hostName || 'Name'}</Typography>
                         <video playsInline muted ref={myVideo} autoPlay className={classes.video} />
                     </Grid>
                 )

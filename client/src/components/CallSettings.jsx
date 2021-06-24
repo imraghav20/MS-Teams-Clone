@@ -1,7 +1,8 @@
 import React, { useContext, useState } from 'react';
-import { AppBar, Toolbar, IconButton, Tooltip } from '@material-ui/core';
+import { AppBar, Toolbar, IconButton, Tooltip, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { VideocamOff, Videocam, Mic, MicOff, ScreenShare, StopScreenShare, Info, PanTool, Chat, People, PhoneDisabled } from '@material-ui/icons';
+import { VideocamOff, Videocam, Mic, MicOff, ScreenShare, StopScreenShare, Info, PanTool, Chat, People, PhoneDisabled, Assignment } from '@material-ui/icons';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import { SocketContext } from '../SocketContext';
 
@@ -36,6 +37,8 @@ const CallSettings = () => {
     const [videoOn, setVideoOn] = useState(false);
     const [audioOn, setAudioOn] = useState(false);
     const [shareScreen, setShareScreen] = useState(false);
+    const [infoOn, setInfoOn] = useState(false);
+
     return (
         <div>
             <AppBar className={classes.appBar} position='fixed'>
@@ -94,10 +97,12 @@ const CallSettings = () => {
                             </Tooltip>
                         )
                     }
-                    <Tooltip title='Show Meet Info'>
-                        <IconButton>
-                            <Info fontSize="large" style={{ fill: "white" }} />
-                        </IconButton>
+                    <Tooltip title='Copy Meet Link'>
+                        <CopyToClipboard text={me}>
+                            <IconButton>
+                                <Assignment fontSize="large" style={{ fill: "white" }} />
+                            </IconButton>
+                        </CopyToClipboard>
                     </Tooltip>
                     <Tooltip title='Raise Hand'>
                         <IconButton>
