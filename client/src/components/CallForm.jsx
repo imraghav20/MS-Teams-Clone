@@ -1,5 +1,4 @@
 import React, { useContext, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { Button, TextField, Typography, Grid, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Phone } from '@material-ui/icons';
@@ -42,9 +41,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CallForm = () => {
-    // const { me, callAccepted, name, setName, callEnded, leaveCall, callUser } = useContext(SocketContext);
-    // const [idToCall, setIdToCall] = useState('');
-    const [hostName, setHostName] = useState('');
+    const { setCallStarted, name, setName, callUser } = useContext(SocketContext);
+
+    const [idToCall, setIdToCall] = useState('');
 
     const classes = useStyles();
 
@@ -57,20 +56,15 @@ const CallForm = () => {
                 <form className={classes.root} autoComplete="off">
                     <Grid container direction='row' align='center' justify='center' alignItems='center'>
                         <Grid item xs={8}>
-                            <TextField label='Name' value={hostName} required fullWidth onChange={(e) => setHostName(e.target.value)} />
+                            <TextField label='Name' value={name} required fullWidth onChange={(e) => setName(e.target.value)} />
                         </Grid>
                         <Grid item xs={1}>
 
                         </Grid>
                         <Grid item xs={3}>
-                            <Link to={{
-                                pathname: "/video-call",
-                                state: { hostName: {hostName} }
-                            }}>
-                                <Button type='submit' variant="contained" color="primary" startIcon={<Phone fontSize="large" />} fullWidth className={classes.margin}>
-                                    Start Call
-                                </Button>
-                            </Link>
+                            <Button type='submit' variant="contained" onClick={(e) => { e.preventDefault(); setCallStarted(true); }} color="primary" startIcon={<Phone fontSize="large" />} fullWidth className={classes.margin}>
+                                Start Call
+                            </Button>
                         </Grid>
                     </Grid>
                 </form>
@@ -83,16 +77,16 @@ const CallForm = () => {
                     Join a Call
                 </Typography>
                 <form className={classes.root} autoComplete="off">
-                    <TextField label='Name' required fullWidth />
+                    <TextField label='Name' required fullWidth onChange={(e) => setName(e.target.value)} />
                     <Grid container direction='row' align='center' justify='center' alignItems='center'>
                         <Grid item xs={8}>
-                            <TextField label='Call ID' required fullWidth />
+                            <TextField label='Call ID' required fullWidth onChange={(e) => setIdToCall(e.target.value)} />
                         </Grid>
                         <Grid item xs={1}>
 
                         </Grid>
                         <Grid item xs={3}>
-                            <Button type='submit' variant="contained" color="primary" startIcon={<Phone fontSize="large" />} fullWidth className={classes.margin}>
+                            <Button type='submit' variant="contained" color="primary" onClick={(e) => { e.preventDefault(); setCallStarted(true); callUser(idToCall); }} startIcon={<Phone fontSize="large" />} fullWidth className={classes.margin}>
                                 Join Call
                             </Button>
                         </Grid>

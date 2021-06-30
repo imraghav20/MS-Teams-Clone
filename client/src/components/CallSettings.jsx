@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
-import { AppBar, Toolbar, IconButton, Tooltip, Typography } from '@material-ui/core';
+import { AppBar, Toolbar, IconButton, Tooltip } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { VideocamOff, Videocam, Mic, MicOff, ScreenShare, StopScreenShare, Info, PanTool, Chat, People, PhoneDisabled, Assignment } from '@material-ui/icons';
+import { VideocamOff, Videocam, Mic, MicOff, ScreenShare, StopScreenShare, PanTool, Chat, People, PhoneDisabled, Assignment } from '@material-ui/icons';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import { SocketContext } from '../SocketContext';
@@ -33,11 +33,10 @@ const useStyles = makeStyles((theme) => ({
 
 const CallSettings = () => {
     const classes = useStyles();
-    const { me, callAccepted, name, setName, callEnded, leaveCall, callUser } = useContext(SocketContext);
+    const { me, leaveCall } = useContext(SocketContext);
     const [videoOn, setVideoOn] = useState(false);
     const [audioOn, setAudioOn] = useState(false);
     const [shareScreen, setShareScreen] = useState(false);
-    const [infoOn, setInfoOn] = useState(false);
 
     return (
         <div>

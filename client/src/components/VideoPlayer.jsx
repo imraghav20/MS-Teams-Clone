@@ -29,16 +29,22 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const VideoPlayer = () => {
-    const { name, callAccepted, myVideo, userVideo, callEnded, stream, call } = useContext(SocketContext);
-    const hostName = useLocation();
+    const { name, callAccepted, myVideo, userVideo, callEnded, stream, call, callUser } = useContext(SocketContext);
+    const getState = useLocation();
+    if (getState.state.joinName) {
+        console.log(getState.state.joinName.joinName);
+        console.log(getState.state.idToCall.idToCall);
+        callUser(getState.state.idToCall.idToCall);
+    }
     const classes = useStyles();
+    // getState.state.hostName.hostName
     return (
         <Grid>
             {/* Our own video */}
             {
                 stream && (
                     <Grid item xs={12} md={6}>
-                        <Typography className={classes.typography} variant='h5' gutterBottom>{hostName.state.hostName.hostName || 'Name'}</Typography>
+                        <Typography className={classes.typography} variant='h5' gutterBottom>{'Name'}</Typography>
                         <video playsInline muted ref={myVideo} autoPlay className={classes.video} />
                     </Grid>
                 )

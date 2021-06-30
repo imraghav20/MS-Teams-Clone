@@ -4,7 +4,7 @@ import { Typography, AppBar } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 import VideoPlayer from '../components/VideoPlayer';
-// import Notifications from '../components/Notifications';
+import Notifications from '../components/Notifications';
 // import Options from '../components/Options';
 import CallSettings from '../components/CallSettings';
 
@@ -42,6 +42,7 @@ const VideoChat = () => {
                 </AppBar>
                 <VideoPlayer />
                 <CallSettings />
+                <Notifications />
                 {/* <Options>
                     <Notifications />
                 </Options> */}
