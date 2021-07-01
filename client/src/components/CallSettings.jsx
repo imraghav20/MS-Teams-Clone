@@ -33,10 +33,30 @@ const useStyles = makeStyles((theme) => ({
 
 const CallSettings = () => {
     const classes = useStyles();
-    const { me, leaveCall } = useContext(SocketContext);
-    const [videoOn, setVideoOn] = useState(false);
-    const [audioOn, setAudioOn] = useState(false);
+    const { me, stream, leaveCall } = useContext(SocketContext);
+    const [videoOn, setVideoOn] = useState(true);
+    const [audioOn, setAudioOn] = useState(true);
     const [shareScreen, setShareScreen] = useState(false);
+
+    const offCamera = () => {
+        var vidTrack = stream.getVideoTracks();
+        vidTrack.forEach(track => track.enabled = false);
+    }
+
+    const onCamera = () => {
+        var vidTrack = stream.getVideoTracks();
+        vidTrack.forEach(track => track.enabled = true);
+    }
+
+    const offMic = () => {
+        var audTrack = stream.getAudioTracks();
+        audTrack.forEach(track => track.enabled = false);
+    }
+
+    const onMic = () => {
+        var audTrack = stream.getAudioTracks();
+        audTrack.forEach(track => track.enabled = true);
+    }
 
     return (
         <div>
@@ -45,7 +65,7 @@ const CallSettings = () => {
                     {
                         videoOn && (
                             <Tooltip title='Turn Camera Off'>
-                                <IconButton onClick={() => setVideoOn(false)}>
+                                <IconButton onClick={() => { setVideoOn(false); offCamera(); }}>
                                     <VideocamOff fontSize="large" style={{ fill: "white" }} />
                                 </IconButton>
                             </Tooltip>
@@ -54,7 +74,7 @@ const CallSettings = () => {
                     {
                         !videoOn && (
                             <Tooltip title='Turn Camera On'>
-                                <IconButton onClick={() => setVideoOn(true)}>
+                                <IconButton onClick={() => { setVideoOn(true); onCamera(); }}>
                                     <Videocam fontSize="large" style={{ fill: "white" }} />
                                 </IconButton>
                             </Tooltip>
@@ -63,7 +83,7 @@ const CallSettings = () => {
                     {
                         audioOn && (
                             <Tooltip title='Turn Mic Off'>
-                                <IconButton onClick={() => setAudioOn(false)}>
+                                <IconButton onClick={() => { setAudioOn(false); offMic(); }}>
                                     <MicOff fontSize="large" style={{ fill: "white" }} />
                                 </IconButton>
                             </Tooltip>
@@ -72,7 +92,7 @@ const CallSettings = () => {
                     {
                         !audioOn && (
                             <Tooltip title='Turn Mic On'>
-                                <IconButton onClick={() => setAudioOn(true)}>
+                                <IconButton onClick={() => { setAudioOn(true); onMic(); }}>
                                     <Mic fontSize="large" style={{ fill: "white" }} />
                                 </IconButton>
                             </Tooltip>
@@ -96,7 +116,7 @@ const CallSettings = () => {
                             </Tooltip>
                         )
                     }
-                    <Tooltip title='Copy Meet Link'>
+                    <Tooltip title='Copy Meet ID'>
                         <CopyToClipboard text={me}>
                             <IconButton>
                                 <Assignment fontSize="large" style={{ fill: "white" }} />
