@@ -24,12 +24,14 @@ io.on("connection", (socket) => {
         socket.broadcast.emit("callEnded.");
     });
 
-    socket.on("callUser", ({userToCall, signalData, from, name}) => {
+    socket.on("callUser", ({ userToCall, signalData, from, name }) => {
         io.to(userToCall).emit("callUser", { signal: signalData, from, name });
     });
 
     socket.on("answerCall", (data) => {
-        io.to(data.to).emit("callAccepted", data.signal);
+        const signal = data.signal;
+        const hostName = data.from;
+        io.to(data.to).emit("callAccepted", { signal, name: hostName, from: data.to });
     })
 })
 

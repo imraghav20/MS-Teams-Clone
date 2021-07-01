@@ -4,7 +4,8 @@ import Peer from 'simple-peer';
 
 const SocketContext = createContext();
 
-const socket = io('https://video-chat-app-imraghav20.herokuapp.com/');
+// const socket = io('https://video-chat-app-imraghav20.herokuapp.com/');
+const socket = io('http://localhost:5000/');
 
 const ContextProvider = ({ children }) => {
     const [stream, setStream] = useState(null);
@@ -42,7 +43,7 @@ const ContextProvider = ({ children }) => {
         const peer = new Peer({ initiator: false, trickle: false, stream });
 
         peer.on('signal', (data) => {
-            socket.emit('answerCall', { signal: data, to: call.from });
+            socket.emit('answerCall', { signal: data, to: call.from, from: name });
         });
 
         peer.on('stream', (currentStream) => {
@@ -65,9 +66,14 @@ const ContextProvider = ({ children }) => {
             userVideo.current.srcObject = currentStream;
         });
 
-        socket.on('callAccepted', (signal) => {
+        socket.on('callAccepted', (data) => {
             setCallAccepted(true);
-            peer.signal(signal);
+            const signal = data.signal;
+            const hostName = data.name;
+            const from = data.from;
+            setCall({ isReceivedCall: true, from, name: hostName, signal });
+            console.log(hostName);
+            peer.signal(data.signal);
         });
 
         connectionRef.current = peer;

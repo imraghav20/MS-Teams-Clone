@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CallForm = () => {
-    const { setCallStarted, name, setName, callUser } = useContext(SocketContext);
+    const { setCallStarted, setName, callUser } = useContext(SocketContext);
 
     const [idToCall, setIdToCall] = useState('');
 
@@ -56,7 +56,7 @@ const CallForm = () => {
                 <form className={classes.root} autoComplete="off">
                     <Grid container direction='row' align='center' justify='center' alignItems='center'>
                         <Grid item xs={8}>
-                            <TextField label='Name' value={name} required fullWidth onChange={(e) => setName(e.target.value)} />
+                            <TextField label='Name' required fullWidth onChange={(e) => setName(e.target.value)} />
                         </Grid>
                         <Grid item xs={1}>
 
