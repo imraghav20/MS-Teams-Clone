@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CallForm = () => {
-    const { setCallStarted, setName, callUser } = useContext(SocketContext);
+    const { setCallStarted, setCallJoined, setName, callUser } = useContext(SocketContext);
 
     const [idToCall, setIdToCall] = useState('');
 
@@ -86,7 +86,7 @@ const CallForm = () => {
 
                         </Grid>
                         <Grid item xs={3}>
-                            <Button type='submit' variant="contained" color="primary" onClick={(e) => { e.preventDefault(); setCallStarted(true); callUser(idToCall); }} startIcon={<Phone fontSize="large" />} fullWidth className={classes.margin}>
+                            <Button type='submit' variant="contained" color="primary" onClick={(e) => { e.preventDefault(); setCallStarted(true); setCallJoined(true); callUser(idToCall); }} startIcon={<Phone fontSize="large" />} fullWidth className={classes.margin}>
                                 Join Call
                             </Button>
                         </Grid>

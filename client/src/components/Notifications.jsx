@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Notifications = () => {
-    const { answerCall, call, callAccepted } = useContext(SocketContext);
+    const { answerCall, call, callAccepted, callJoined } = useContext(SocketContext);
     const classes = useStyles();
     return (
         <div className={classes.notification}>
@@ -30,6 +30,12 @@ const Notifications = () => {
                     <Button variant="contained" color="primary" onClick={answerCall}>
                         Answer
                     </Button>
+                </Paper>
+            )}
+
+            {callJoined && !callAccepted && (
+                <Paper className={classes.paper}>
+                    <h1>Waiting for host to let you in...</h1>
                 </Paper>
             )}
         </div>

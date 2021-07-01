@@ -12,6 +12,7 @@ const ContextProvider = ({ children }) => {
     const [me, setMe] = useState('');
     const [call, setCall] = useState({});
     const [callStarted, setCallStarted] = useState(false);
+    const [callJoined, setCallJoined] = useState(false);
     const [callAccepted, setCallAccepted] = useState(false);
     const [callEnded, setCallEnded] = useState(false);
     const [name, setName] = useState('');
@@ -71,7 +72,7 @@ const ContextProvider = ({ children }) => {
             const signal = data.signal;
             const hostName = data.name;
             const from = data.from;
-            setCall({ isReceivedCall: true, from, name: hostName, signal });
+            setCall({ isReceivedCall: false, from, name: hostName, signal });
             console.log(hostName);
             peer.signal(data.signal);
         });
@@ -93,6 +94,8 @@ const ContextProvider = ({ children }) => {
             callAccepted,
             callStarted,
             setCallStarted,
+            callJoined,
+            setCallJoined,
             myVideo,
             userVideo,
             stream,
