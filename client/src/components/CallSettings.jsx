@@ -33,10 +33,11 @@ const useStyles = makeStyles((theme) => ({
 
 const CallSettings = () => {
     const classes = useStyles();
-    const { me, stream, leaveCall } = useContext(SocketContext);
+    const { me, stream, leaveCall, myVideo, videoStream, connectionRef } = useContext(SocketContext);
     const [videoOn, setVideoOn] = useState(true);
     const [audioOn, setAudioOn] = useState(true);
     const [shareScreen, setShareScreen] = useState(false);
+    const [shareStream, setShareStream] = useState(null);
 
     const offCamera = () => {
         var vidTrack = stream.getVideoTracks();
@@ -56,6 +57,33 @@ const CallSettings = () => {
     const onMic = () => {
         var audTrack = stream.getAudioTracks();
         audTrack.forEach(track => track.enabled = true);
+    }
+
+    const shareUserScreen = () => {
+        navigator.mediaDevices.getDisplayMedia({ cursor: true })
+            .then((currentStream) => {
+                setShareStream(currentStream);
+
+                connectionRef.current.replaceTrack(stream.getTracks()[1], currentStream.getTracks()[0], stream);
+
+                myVideo.current.srcObject = currentStream;
+                setShareScreen(true);
+
+                currentStream.getTracks()[0].onended = () => {
+                    stopSharingScreen();
+                }
+            });
+    }
+
+    const stopSharingScreen = () => {
+        connectionRef.current.replaceTrack(stream.getTracks()[1], videoStream.getTracks()[1], stream);
+        myVideo.current.srcObject = videoStream;
+
+        if (shareStream) {
+            shareStream.getTracks()[0].stop();
+        }
+
+        setShareScreen(false);
     }
 
     return (
@@ -101,7 +129,7 @@ const CallSettings = () => {
                     {
                         !shareScreen && (
                             <Tooltip title='Share Your Screen'>
-                                <IconButton onClick={() => setShareScreen(true)}>
+                                <IconButton onClick={() => { shareUserScreen(); }}>
                                     <ScreenShare fontSize="large" style={{ fill: "white" }} />
                                 </IconButton>
                             </Tooltip>
@@ -110,7 +138,7 @@ const CallSettings = () => {
                     {
                         shareScreen && (
                             <Tooltip title='Stop Sharing'>
-                                <IconButton onClick={() => setShareScreen(false)}>
+                                <IconButton onClick={() => { stopSharingScreen(); }}>
                                     <StopScreenShare fontSize="large" style={{ fill: "white" }} />
                                 </IconButton>
                             </Tooltip>
