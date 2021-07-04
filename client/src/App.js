@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import CallForm from './components/CallForm';
 import CallSettings from './components/CallSettings';
 import Notifications from './components/Notifications';
+import Chat from './components/Chat';
 
 import { SocketContext } from './SocketContext';
 
@@ -78,6 +79,7 @@ const App = () => {
                     )
                 }
             </Grid>
+            <Chat />
             <CallSettings />
             <Notifications />
         </div>

@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
 
 const CallSettings = () => {
     const classes = useStyles();
-    const { me, stream, leaveCall, myVideo, videoStream, connectionRef } = useContext(SocketContext);
+    const { me, stream, leaveCall, myVideo, videoStream, connectionRef, chatVisibility, setChatVisibility } = useContext(SocketContext);
     const [videoOn, setVideoOn] = useState(true);
     const [audioOn, setAudioOn] = useState(true);
     const [shareScreen, setShareScreen] = useState(false);
@@ -157,7 +157,7 @@ const CallSettings = () => {
                         </IconButton>
                     </Tooltip>
                     <Tooltip title='Show Conversation'>
-                        <IconButton>
+                        <IconButton onClick={() => { setChatVisibility(!chatVisibility); onMic(); }}>
                             <Chat fontSize="large" style={{ fill: "white" }} />
                         </IconButton>
                     </Tooltip>

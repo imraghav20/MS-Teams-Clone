@@ -17,6 +17,7 @@ const ContextProvider = ({ children }) => {
     const [callAccepted, setCallAccepted] = useState(false);
     const [callEnded, setCallEnded] = useState(false);
     const [name, setName] = useState('');
+    const [chatVisibility, setChatVisibility] = useState(false);
 
     const myVideo = useRef();
     const userVideo = useRef();
@@ -101,6 +102,8 @@ const ContextProvider = ({ children }) => {
             connectionRef,
             stream,
             videoStream,
+            chatVisibility,
+            setChatVisibility,
             name,
             setName,
             callEnded,
