@@ -7,13 +7,17 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { SocketContext } from '../SocketContext';
 
 const useStyles = makeStyles((theme) => ({
+    wrapper: {
+        margin: 'auto',
+        width: 'fit-content'
+    },
     appBar: {
         top: 'auto',
-        bottom: '16px',
-        left: '25%',
         background: '#0a0a0a',
-        width: '50%',
+        width: 'fit-content',
         alignItems: 'center',
+        position: 'inherit',
+        border: '1px solid white',
     },
     root: {
         flexGrow: 1,
@@ -33,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 
 const CallSettings = () => {
     const classes = useStyles();
-    const { me, stream, leaveCall, myVideo, videoStream, connectionRef, chatVisibility, setChatVisibility } = useContext(SocketContext);
+    const { callStarted, me, stream, leaveCall, myVideo, videoStream, connectionRef, chatVisibility, setChatVisibility } = useContext(SocketContext);
     const [videoOn, setVideoOn] = useState(true);
     const [audioOn, setAudioOn] = useState(true);
     const [shareScreen, setShareScreen] = useState(false);
@@ -87,7 +91,7 @@ const CallSettings = () => {
     }
 
     return (
-        <div>
+        <div className={classes.wrapper}>
             <AppBar className={classes.appBar} position='fixed'>
                 <Toolbar>
                     {
@@ -127,50 +131,56 @@ const CallSettings = () => {
                         )
                     }
                     {
-                        !shareScreen && (
-                            <Tooltip title='Share Your Screen'>
-                                <IconButton onClick={() => { shareUserScreen(); }}>
-                                    <ScreenShare fontSize="large" style={{ fill: "white" }} />
-                                </IconButton>
-                            </Tooltip>
+                        callStarted && (
+                            <div>
+                                {
+                                    !shareScreen && (
+                                        <Tooltip title='Share Your Screen'>
+                                            <IconButton onClick={() => { shareUserScreen(); }}>
+                                                <ScreenShare fontSize="large" style={{ fill: "white" }} />
+                                            </IconButton>
+                                        </Tooltip>
+                                    )
+                                }
+                                {
+                                    shareScreen && (
+                                        <Tooltip title='Stop Sharing'>
+                                            <IconButton onClick={() => { stopSharingScreen(); }}>
+                                                <StopScreenShare fontSize="large" style={{ fill: "white" }} />
+                                            </IconButton>
+                                        </Tooltip>
+                                    )
+                                }
+                                <Tooltip title='Copy Meet ID'>
+                                    <CopyToClipboard text={me}>
+                                        <IconButton>
+                                            <Assignment fontSize="large" style={{ fill: "white" }} />
+                                        </IconButton>
+                                    </CopyToClipboard>
+                                </Tooltip>
+                                <Tooltip title='Raise Hand'>
+                                    <IconButton>
+                                        <PanTool fontSize="large" style={{ fill: "white" }} />
+                                    </IconButton>
+                                </Tooltip>
+                                <Tooltip title='Show Conversation'>
+                                    <IconButton onClick={() => { setChatVisibility(!chatVisibility); }}>
+                                        <Chat fontSize="large" style={{ fill: "white" }} />
+                                    </IconButton>
+                                </Tooltip>
+                                <Tooltip title='Show Participants'>
+                                    <IconButton>
+                                        <People fontSize="large" style={{ fill: "white" }} />
+                                    </IconButton>
+                                </Tooltip>
+                                <Tooltip title='Leave Call'>
+                                    <IconButton onClick={leaveCall}>
+                                        <PhoneDisabled fontSize="large" style={{ fill: "red" }} />
+                                    </IconButton>
+                                </Tooltip>
+                            </div>
                         )
                     }
-                    {
-                        shareScreen && (
-                            <Tooltip title='Stop Sharing'>
-                                <IconButton onClick={() => { stopSharingScreen(); }}>
-                                    <StopScreenShare fontSize="large" style={{ fill: "white" }} />
-                                </IconButton>
-                            </Tooltip>
-                        )
-                    }
-                    <Tooltip title='Copy Meet ID'>
-                        <CopyToClipboard text={me}>
-                            <IconButton>
-                                <Assignment fontSize="large" style={{ fill: "white" }} />
-                            </IconButton>
-                        </CopyToClipboard>
-                    </Tooltip>
-                    <Tooltip title='Raise Hand'>
-                        <IconButton>
-                            <PanTool fontSize="large" style={{ fill: "white" }} />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title='Show Conversation'>
-                        <IconButton onClick={() => { setChatVisibility(!chatVisibility); }}>
-                            <Chat fontSize="large" style={{ fill: "white" }} />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title='Show Participants'>
-                        <IconButton>
-                            <People fontSize="large" style={{ fill: "white" }} />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title='Leave Call'>
-                        <IconButton onClick={leaveCall}>
-                            <PhoneDisabled fontSize="large" style={{ fill: "red" }} />
-                        </IconButton>
-                    </Tooltip>
                 </Toolbar>
             </AppBar>
         </div>
