@@ -32,7 +32,7 @@ io.on("connection", (socket) => {
         const signal = data.signal;
         const hostName = data.from;
         io.to(data.to).emit("callAccepted", { signal, name: hostName, from: data.to });
-    })
+    });
 })
 
 server.listen(PORT, () => {

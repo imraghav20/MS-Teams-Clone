@@ -157,7 +157,7 @@ const CallSettings = () => {
                         </IconButton>
                     </Tooltip>
                     <Tooltip title='Show Conversation'>
-                        <IconButton onClick={() => { setChatVisibility(!chatVisibility); onMic(); }}>
+                        <IconButton onClick={() => { setChatVisibility(!chatVisibility); }}>
                             <Chat fontSize="large" style={{ fill: "white" }} />
                         </IconButton>
                     </Tooltip>

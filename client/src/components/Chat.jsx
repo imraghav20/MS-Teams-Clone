@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Tooltip, IconButton, Paper, TextField } from '@material-ui/core';
 import { Send } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
@@ -44,8 +44,6 @@ const useStyles = makeStyles((theme) => ({
     middle: {
         marginLeft: 'auto',
         marginRight: 'auto',
-        marginBottom: '5px',
-        marginTop: '5px',
         textAlign: 'center',
         clear: 'both',
         backgroundColor: 'lightblue'
@@ -53,20 +51,39 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Chat = () => {
-    const { chatVisibility } = useContext(SocketContext);
+    const { chatVisibility, messageRef, connectionRef, name } = useContext(SocketContext);
     const classes = useStyles();
+    const [message, setMessage] = useState('');
+    
+    const sendMessage = () => {
+        if (message) {
+            messageRef.current.push(
+                { message: message, position: "right" }
+            );
+
+            if (connectionRef.current) {
+                connectionRef.current.send(name + ": " + message);
+            }
+
+            setMessage('');
+        }
+    }
+
     return (
         <div>
             {
                 chatVisibility && (
                     <Paper className={classes.paper}>
                         <div id="chat-container" className={classes.chatContainer}>
-                            <div className={[classes.message, classes.middle].join(' ')}>Hi! How are you?</div>
+                            {/* <div className={[classes.message, classes.middle].join(' ')}>Hi! How are you?</div> */}
+                            {messageRef.current.map((msg) => (msg.position === "middle") ? <div className={[classes.message, classes.middle].join(' ')}>{msg.message}</div>
+                                : (msg.position === "left") ? <div className={[classes.message, classes.left].join(' ')}>{msg.message}</div>
+                                    : <div className={[classes.message, classes.right].join(' ')}>{msg.message}</div>)}
                         </div>
                         <form action='#' autoComplete="off">
-                            <TextField label="Type Message" name="messageInp" id="messageInp" className={classes.messageField} />
+                            <TextField label="Type Message" value={message} name="messageInp" id="messageInp" className={classes.messageField} onChange={(e) => setMessage(e.target.value)} />
                             <Tooltip title='Send Message'>
-                                <IconButton type='submit' color='primary' onClick={(e) => { e.preventDefault(); }}>
+                                <IconButton type='submit' color='primary' onClick={(e) => { e.preventDefault(); sendMessage(); }}>
                                     <Send fontSize="large" />
                                 </IconButton>
                             </Tooltip>

@@ -2,6 +2,8 @@ import React, { createContext, useState, useRef, useEffect } from 'react';
 import { io } from 'socket.io-client';
 import Peer from 'simple-peer';
 
+import sound from './assets/ding.mp3';
+
 const SocketContext = createContext();
 
 // const socket = io('https://video-chat-app-imraghav20.herokuapp.com/');
@@ -22,6 +24,8 @@ const ContextProvider = ({ children }) => {
     const myVideo = useRef();
     const userVideo = useRef();
     const connectionRef = useRef();
+    const messageRef = useRef([]);
+    const audio = useRef(new Audio(sound));
 
     useEffect(() => {
         navigator.mediaDevices.getUserMedia({ video: true, audio: true })
@@ -48,10 +52,24 @@ const ContextProvider = ({ children }) => {
 
         peer.on('signal', (data) => {
             socket.emit('answerCall', { signal: data, to: call.from, from: name });
+            messageRef.current.push(
+                { message: call.name + " joined the chat.", position: "middle" }
+            );
+            audio.current.play();
         });
 
         peer.on('stream', (currentStream) => {
             userVideo.current.srcObject = currentStream;
+        });
+
+        peer.on('data', (data) => {
+            let str = new TextDecoder("utf-8").decode(data);
+            messageRef.current.push(
+                { message: str, position: "left" }
+            );
+            setChatVisibility(false);
+            setChatVisibility(true);
+            audio.current.play();
         });
 
         peer.signal(call.signal);
@@ -67,6 +85,16 @@ const ContextProvider = ({ children }) => {
 
         peer.on('stream', (currentStream) => {
             userVideo.current.srcObject = currentStream;
+        });
+
+        peer.on('data', (data) => {
+            let str = new TextDecoder("utf-8").decode(data);
+            messageRef.current.push(
+                { message: str, position: "left" }
+            );
+            setChatVisibility(false);
+            setChatVisibility(true);
+            audio.current.play();
         });
 
         socket.on('callAccepted', (data) => {
@@ -100,6 +128,7 @@ const ContextProvider = ({ children }) => {
             myVideo,
             userVideo,
             connectionRef,
+            messageRef,
             stream,
             videoStream,
             chatVisibility,
