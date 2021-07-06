@@ -6,8 +6,8 @@ import sound from './assets/ding.mp3';
 
 const SocketContext = createContext();
 
-// const socket = io('https://video-chat-app-imraghav20.herokuapp.com/');
-const socket = io('http://localhost:5000/');
+const socket = io('https://video-chat-app-imraghav20.herokuapp.com/');
+// const socket = io('http://localhost:5000/');
 
 const ContextProvider = ({ children }) => {
     const [stream, setStream] = useState(null);
