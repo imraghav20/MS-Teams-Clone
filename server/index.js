@@ -1,6 +1,19 @@
-const app = require('express')();
+const express = require('express');
+const app = express();
 const server = require('http').createServer(app);
 const cors = require('cors');
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+const helmet = require('helmet');
+const morgan = require('morgan');
+const userRoute = require('./routes/users');
+const authRoute = require('./routes/auth');
+
+dotenv.config();
+
+mongoose.connect(process.env.MONGO_URL, {useNewUrlParser: true, useUnifiedTopology: true}, () => {
+    console.log("Connected to Mongo DB.");
+});
 
 const io = require('socket.io')(server, {
     cors: {
@@ -10,12 +23,19 @@ const io = require('socket.io')(server, {
 });
 
 app.use(cors());
+app.use(express.json());
+app.use(helmet());
+app.use(morgan('common'));
 
 const PORT = process.env.PORT || 5000;
 
 app.get("/", (req, res) => {
     res.send("Server is running.");
 });
+
+app.use('/api/users', userRoute);
+
+app.use('/api/auth', authRoute);
 
 io.on("connection", (socket) => {
     socket.emit("me", socket.id);
