@@ -1,4 +1,5 @@
 import React, { createContext, useState, useRef, useEffect } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import Peer from 'simple-peer';
 
@@ -6,10 +7,12 @@ import sound from './assets/ding.mp3';
 
 const SocketContext = createContext();
 
-const socket = io('https://video-chat-app-imraghav20.herokuapp.com/');
-// const socket = io('http://localhost:5000/');
+// const socket = io('https://video-chat-app-imraghav20.herokuapp.com/');
+const socket = io('http://localhost:5000/');
 
 const ContextProvider = ({ children }) => {
+    const [user, setUser] = useState(JSON.parse(localStorage.getItem('profile')));
+
     const [stream, setStream] = useState(null);
     const [videoStream, setVideoStream] = useState(null);
     const [me, setMe] = useState('');
@@ -27,23 +30,33 @@ const ContextProvider = ({ children }) => {
     const messageRef = useRef([]);
     const audio = useRef(new Audio(sound));
 
-    useEffect(() => {
-        navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-            .then((currentStream) => {
-                setStream(currentStream);
+    const location = useLocation();
+    const history = useHistory();
 
-                myVideo.current.srcObject = currentStream;
-                setVideoStream(currentStream);
+    useEffect(() => {
+        const token = user?.token;
+        if (!token) {
+            history.push('/auth');
+            setUser(null);
+        }
+        else {
+            navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+                .then((currentStream) => {
+                    setStream(currentStream);
+
+                    myVideo.current.srcObject = currentStream;
+                    setVideoStream(currentStream);
+                });
+
+            socket.on('me', (id) => {
+                setMe(id);
             });
 
-        socket.on('me', (id) => {
-            setMe(id);
-        });
-
-        socket.on('callUser', ({ from, name: callerName, signal }) => {
-            setCall({ isReceivedCall: true, from, name: callerName, signal });
-        })
-    }, []);
+            socket.on('callUser', ({ from, name: callerName, signal }) => {
+                setCall({ isReceivedCall: true, from, name: callerName, signal });
+            })
+        }
+    }, [location]);
 
     const answerCall = () => {
         setCallAccepted(true);

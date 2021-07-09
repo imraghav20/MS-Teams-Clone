@@ -1,53 +1,74 @@
-import React from 'react';
-import { Grid, Typography } from '@material-ui/core';
+import React, { useContext } from 'react';
+import { Typography, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import ms_teams_logo_white from '../assets/ms_teams_logo_white.png';
 
 import CallForm from '../components/CallForm';
+import CallSettings from '../components/CallSettings';
+import Notifications from '../components/Notifications';
+import Chat from '../components/Chat';
+
+import { ContextProvider, SocketContext } from '../SocketContext';
 
 const useStyles = makeStyles((theme) => ({
-    body: {
-        background: '#6264a7',
-        height: '100vh',
-        width: '100vw',
+    wrapper: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        width: '100%',
     },
-    inner: {
-        position: 'absolute',
-        top: '50%',
-        transform: 'translateY(-50%)',
-        width: '100%'
+    video: {
+        width: '50vw',
+        height: '78vh',
+        border: '2px solid black',
+        [theme.breakpoints.down('xs')]: {
+            width: '300px',
+        },
     },
     typography: {
-        color: '#ffffff'
-    }
-}));
+        zIndex: '1000',
+        position: 'absolute',
+        border: '2px solid black',
+        background: '#6264a7',
+        padding: '5px 5px'
+    },
+}))
 
-const App = () => {
+const Home = () => {
+    const { name, callAccepted, callStarted, myVideo, userVideo, callEnded, stream, call } = useContext(SocketContext);
     const classes = useStyles();
+
     return (
-        <div className={classes.body}>
-            <div className={classes.inner}>
-                <Grid container xs={12} direction='row'>
-                    <Grid container xs={6} direction='row'>
-                        <Grid container xs={5} direction='column' justify='center'>
-                            <Grid>
-                                <img src={ms_teams_logo_white} />
+        <div>
+            <Grid container xs={12} direction='row' justify='center'>
+                <Grid container xs={6}>
+                    {
+                        stream && (
+                            <Grid item xs={12} md={6}>
+                                <Typography className={classes.typography} variant='h5' gutterBottom>{name || 'Name'}</Typography>
+                                <video playsInline muted ref={myVideo} autoPlay className={classes.video} />
                             </Grid>
-                        </Grid>
-                        <Grid container xs={7} direction='column' justify='center'>
-                            <Grid>
-                                <Typography variant='h3' className={classes.typography}>Microsoft Teams</Typography>
-                                <Typography variant='h3' className={classes.typography}>Clone</Typography>
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                    <Grid container xs={6} direction='column' justify='center'>
-                        <CallForm />
-                    </Grid>
+                        )
+                    }
                 </Grid>
-            </div>
+                {
+                    !callAccepted && !callStarted && (<Grid container xs={6} direction='column' justify='center'>
+                        <CallForm />
+                    </Grid>)
+                }
+                {
+                    callAccepted && !callEnded && (
+                        <Grid item xs={12} md={6}>
+                            <Typography className={classes.typography} variant='h5' gutterBottom>{call.name || 'Name'}</Typography>
+                            <video playsInline ref={userVideo} autoPlay className={classes.video} />
+                        </Grid>
+                    )
+                }
+            </Grid>
+            <Chat />
+            <CallSettings />
+            <Notifications />
         </div>
     );
 };
 
-export default App;
+export default Home;

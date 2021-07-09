@@ -1,13 +1,19 @@
 import React, { useContext } from 'react';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import { Typography, AppBar, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
+import TopBar from './components/TopBar';
 import CallForm from './components/CallForm';
 import CallSettings from './components/CallSettings';
 import Notifications from './components/Notifications';
 import Chat from './components/Chat';
 
+import Auth from './views/Auth';
+import Home from './views/Home';
+
 import { SocketContext } from './SocketContext';
+import { ContextProvider } from './SocketContext';
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -47,11 +53,11 @@ const useStyles = makeStyles((theme) => ({
 
 const App = () => {
     const classes = useStyles();
-    const { name, callAccepted, callStarted, myVideo, userVideo, callEnded, stream, call } = useContext(SocketContext);
+    // const { name, callAccepted, callStarted, myVideo, userVideo, callEnded, stream, call } = useContext(SocketContext);
 
     return (
         <div>
-            <AppBar className={classes.appBar} position="static">
+            {/* <AppBar className={classes.appBar} position="static">
                 <Typography variant="h6" align="center" fontFamily="Open Sans">Microsoft Teams Clone</Typography>
             </AppBar>
             <Grid container xs={12} direction='row' justify='center'>
@@ -81,7 +87,18 @@ const App = () => {
             </Grid>
             <Chat />
             <CallSettings />
-            <Notifications />
+            <Notifications /> */}
+            <BrowserRouter>
+                <TopBar />
+                <Switch>
+                    <Route path='/' exact>
+                        <ContextProvider>
+                            <Home />
+                        </ContextProvider>
+                    </Route>
+                    <Route path='/auth' exact component={Auth} />
+                </Switch>
+            </BrowserRouter>
         </div>
     );
 };
