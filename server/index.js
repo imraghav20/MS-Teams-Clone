@@ -8,6 +8,7 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const userRoute = require('./routes/users');
 const authRoute = require('./routes/auth');
+const conversationRoute = require('./routes/conversation');
 
 dotenv.config();
 
@@ -36,6 +37,8 @@ app.get("/", (req, res) => {
 app.use('/api/users', userRoute);
 
 app.use('/api/auth', authRoute);
+
+app.use('/api/conversations', conversationRoute);
 
 io.on("connection", (socket) => {
     socket.emit("me", socket.id);

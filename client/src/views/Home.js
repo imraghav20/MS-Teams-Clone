@@ -7,7 +7,7 @@ import CallSettings from '../components/CallSettings';
 import Notifications from '../components/Notifications';
 import Chat from '../components/Chat';
 
-import { ContextProvider, SocketContext } from '../SocketContext';
+import { SocketContext } from '../SocketContext';
 
 const useStyles = makeStyles((theme) => ({
     wrapper: {
