@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
-import { Typography, Button, TextField, Grid } from '@material-ui/core';
+import React, { useEffect, useState } from 'react';
+import { Typography, Button, TextField, Grid, Paper } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { Send } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
-import { getUserConversations } from '../actions/conversation';
+import { getUserConversations, getConversation, createConversation } from '../actions/conversation';
+import { sendMessage } from '../actions/message';
 
 import Conversation from '../components/Conversation';
 import Message from '../components/Message';
@@ -67,10 +68,46 @@ const Chat = () => {
 
     useEffect(() => {
         dispatch(getUserConversations());
+        localStorage.removeItem("currentChat");
     }, [dispatch]);
 
     const conversations = useSelector((state) => state.conversation);
-    console.log(conversations);
+
+    const [currentChatId, setCurrentChatId] = useState("");
+
+    useEffect(() => {
+        const getMessages = async () => {
+            try {
+                dispatch(getConversation(currentChatId));
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        getMessages();
+    }, [dispatch, currentChatId]);
+
+    const conversation = JSON.parse(localStorage.getItem('currentChat'));
+
+    const [msg, setMsg] = useState("");
+    const formMsgData = {
+        message: msg,
+        convoId: JSON.parse(localStorage.getItem('currentChat'))?.conversation?._id
+    }
+
+    const [formCallData, setFormCallData] = useState({
+        conversationName: ""
+    });
+
+    const handleCallSubmit = (e) => {
+        e.preventDefault();
+        dispatch(createConversation(formCallData));
+    }
+
+    const handleMessageSubmit = (e) => {
+        e.preventDefault();
+        dispatch(sendMessage(formMsgData));
+        setMsg("");
+    }
 
     return (
         <div className={classes.messenger}>
@@ -79,28 +116,79 @@ const Chat = () => {
                     <Typography variant='h6'>Your Chats</Typography>
                 </div>
                 <div className={classes.conversationWrapper}>
+                    {
+                        !conversations.length ? (
+                            <div>
+                                <Typography align='center' variant='h6'>You have no chats to show</Typography>
+                            </div>
+                        )
+                            : (
+                                conversations.map((convo) => (
+                                    <div onClick={() => { setCurrentChatId(convo._id); }}>
+                                        <Conversation key={convo._id} conversation={convo} />
+                                    </div>))
+                            )
+                    }
                 </div>
             </div>
             <div className={classes.chatBox}>
                 <div className={classes.chatBoxWrapper}>
-                    <ChatTopBar />
+                    {
+                        !currentChatId ? <div></div>
+                            : (<ChatTopBar convoName={conversation.conversation ? conversation.conversation.conversationName : ""} />)
+                    }
                     <div className={classes.chatBoxTop}>
+                        {
+                            !currentChatId ? (
+                                <div>
+                                    <Typography align='center' variant='h6'>Select a Chat to view messages.</Typography>
+                                    <form autoComplete="off">
+                                        <Paper style={{ marginTop: '10px' }}>
+                                            <Grid container spacing={2} justify="center">
+                                                <Grid item xs={7}>
+                                                    <TextField name="conversationName" required value={formCallData.conversationName} label="Meeting name" fullWidth onChange={(e) => setFormCallData({ ...formCallData, conversationName: e.target.value })} />
+                                                </Grid>
+                                                <Grid item xs={3}>
+                                                    <Button type="submit" color="primary" className={classes.button} variant='contained' style={{ marginTop: '10px' }} onClick={handleCallSubmit}>Start Call</Button>
+                                                </Grid>
+                                            </Grid>
+                                        </Paper>
+                                    </form>
+                                </div>)
+                                : (
+                                    <div>
+                                        {
+                                            (!conversation.messages || !conversation.messages.length) ? <></>
+                                                : (
+                                                    conversation.messages.map((msg) => (
+                                                        <Message msg={msg} />
+                                                    ))
+                                                )
+                                        }
+                                    </div>
+                                )
+                        }
                     </div>
-                    <div className={classes.chatBoxBottom}>
-                        <Grid container direction='row'>
-                            <Grid item xs={9}>
-                                <TextField label="Type your message..." fullWidth />
-                            </Grid>
-                            <Grid item xs={1}>
+                    {
+                        !currentChatId ? <div></div>
+                            : (
+                                <div className={classes.chatBoxBottom}>
+                                    <Grid container direction='row'>
+                                        <Grid item xs={9}>
+                                            <TextField label="Type your message..." fullWidth value={formMsgData.message} onChange={(e) => setMsg(e.target.value)} />
+                                        </Grid>
+                                        <Grid item xs={1}>
 
-                            </Grid>
-                            <Grid item xs={2}>
-                                <Button type='submit' variant="contained" color="primary" onClick={(e) => { e.preventDefault(); }} startIcon={<Send fontSize="large" />} style={{ marginTop: 10 }} fullWidth>
-                                    Send
-                                </Button>
-                            </Grid>
-                        </Grid>
-                    </div>
+                                        </Grid>
+                                        <Grid item xs={2}>
+                                            <Button type='submit' variant="contained" color="primary" onClick={handleMessageSubmit} startIcon={<Send fontSize="large" />} style={{ marginTop: 10 }} fullWidth>
+                                                Send
+                                            </Button>
+                                        </Grid>
+                                    </Grid>
+                                </div>
+                            )
+                    }
                 </div>
             </div>
         </div>

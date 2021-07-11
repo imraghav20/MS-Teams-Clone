@@ -9,6 +9,7 @@ const morgan = require('morgan');
 const userRoute = require('./routes/users');
 const authRoute = require('./routes/auth');
 const conversationRoute = require('./routes/conversation');
+const messageRoute = require('./routes/message');
 
 dotenv.config();
 
@@ -39,6 +40,8 @@ app.use('/api/users', userRoute);
 app.use('/api/auth', authRoute);
 
 app.use('/api/conversations', conversationRoute);
+
+app.use('/api/messages', messageRoute);
 
 io.on("connection", (socket) => {
     socket.emit("me", socket.id);

@@ -9,6 +9,7 @@ const conversationReducer = (state = [], action) => {
         case GET_ALL:
             return action.payload;
         case GET_CONVO:
+            localStorage.setItem('currentChat', JSON.stringify({...action?.payload}));
             return state;
         default:
             return state;

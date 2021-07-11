@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { Paper, Typography, Grid, Button, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
-import { createConversation } from '../actions/conversation';
+import { createConversation, getConversation } from '../actions/conversation';
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -16,14 +16,14 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-const ChatTopBar = () => {
+const ChatTopBar = ({convoName}) => {
     const classes = useStyles();
     const dispatch = useDispatch();
 
     const [isFormVisible, setIsFormVisible] = useState(false);
     const [formData, setFormData] = useState({
         conversationName: ""
-    })
+    });
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -36,7 +36,7 @@ const ChatTopBar = () => {
                 <Grid container>
                     <Grid item xs={7}>
                         <Typography variant='h6'>
-                            Engage 1:1 Abhishek
+                            {convoName}
                         </Typography>
                     </Grid>
                     <Grid item xs={1}>

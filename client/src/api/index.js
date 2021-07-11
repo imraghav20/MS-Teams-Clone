@@ -16,3 +16,7 @@ export const signIn = (formData) => API.post('/auth/login', formData);
 export const getConversations = () => API.get('/conversations');
 
 export const createConversation = (newConvo) => API.post('/conversations', newConvo);
+
+export const getUserConversation = (chatId) => API.get(`/conversations/${chatId}`);
+
+export const sendMessage = (newMessage) => API.post('/messages', newMessage);

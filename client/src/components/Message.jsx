@@ -1,5 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { format } from "timeago.js";
 
 const useStyles = makeStyles((theme) => ({
     message: {
@@ -7,7 +8,8 @@ const useStyles = makeStyles((theme) => ({
         padding: '10px 20px',
         margin: '5px',
         border: '1px solid black',
-        borderRadius: '5px'
+        borderRadius: '5px',
+        fontFamily: 'sans-serif'
     },
     left: {
         float: 'left',
@@ -36,14 +38,15 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-const Message = () => {
+const Message = ({msg}) => {
     const classes = useStyles();
-
+    const user = JSON.parse(localStorage.getItem('profile'));
+    const direction = user?.result._id === msg.senderId ? classes.right : classes.left;
     return (
-        <div className={[classes.message, classes.left].join(' ')}>
-            <div className={classes.userName}>Abhishek Raghav</div>
-            <p>Hi! How are you?</p>
-            <div className={classes.time}>20/04/2002</div>
+        <div className={[classes.message, direction].join(' ')}>
+            <div className={classes.userName}>{msg.senderName}</div>
+            <p>{msg.text}</p>
+            <div className={classes.time}>{format(msg.createdAt)}</div>
         </div>
     );
 };

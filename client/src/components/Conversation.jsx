@@ -24,16 +24,18 @@ const useStyles = makeStyles((theme) => ({
     },
 
     conversationName: {
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        fontFamily: 'sans-serif'
     }
 }))
 
-const Conversation = () => {
+const Conversation = (conversation) => {
     const classes = useStyles();
+
     return (
         <div className={classes.conversation}>
             <img className={classes.conversationImg} src={chat_icon} />
-            <span className={classes.conversationName}>Engage 1:1 Abhishek</span>
+            <span className={classes.conversationName}>{conversation.conversation.conversationName}</span>
         </div>
     );
 };

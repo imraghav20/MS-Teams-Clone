@@ -1,17 +1,34 @@
 const Conversation = require('../models/conversation');
 const User = require('../models/user');
+const Message = require('../models/message');
 const router = require('express').Router();
 const auth = require('../middleware/auth');
 
 // get all conversations 
 router.get('/', auth, async (req, res) => {
-    if(!req.userId){
-        return res.json({message: "You are not authenticated."})
+    if (!req.userId) {
+        return res.json({ message: "You are not authenticated." })
     }
 
     try {
         const user = await User.findById(req.userId);
-        res.status(200).json(user.chatRooms);
+        const chatRooms = user.chatRooms;
+        const allUserConvos = [];
+        var i = 0;
+        chatRooms.map(async (convoId) => {
+            const conversation = await Conversation.findById(convoId);
+            allUserConvos.push(conversation);
+            i += 1;
+
+            if (i === chatRooms.length) {
+                res.status(200).json(allUserConvos);
+            }
+        });
+
+        if (chatRooms.length === 0) {
+            res.status(200).json(allUserConvos);
+        }
+
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: "Something went wrong!" });
@@ -20,8 +37,8 @@ router.get('/', auth, async (req, res) => {
 
 // new conversation
 router.post('/', auth, async (req, res) => {
-    if(!req.userId){
-        return res.json({message: "You are not authenticated."})
+    if (!req.userId) {
+        return res.json({ message: "You are not authenticated." })
     }
 
     const newConservation = Conversation({
@@ -36,6 +53,36 @@ router.post('/', auth, async (req, res) => {
         const result = await user.save();
 
         res.status(200).json(savedConversation);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Something went wrong!" });
+    }
+});
+
+// get a conversation
+router.get('/:chatId', auth, async (req, res) => {
+    if (!req.userId) {
+        return res.json({ message: "You are not authenticated." })
+    }
+
+    try {
+        const convo = await Conversation.findById(req.params.chatId);
+        const msgIds = convo.messages;
+        const messages = [];
+        var i = 0;
+        msgIds.map(async (id) => {
+            const message = await Message.findById(id);
+            messages.push(message);
+            i += 1;
+
+            if (i === msgIds.length) {
+                res.status(200).json({ conversation: convo, messages });
+            }
+        });
+
+        if (msgIds.length === 0) {
+            res.status(200).json({ conversation: convo, messages });
+        }
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: "Something went wrong!" });
