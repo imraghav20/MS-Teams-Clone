@@ -36,18 +36,53 @@ app.get("/", (req, res) => {
 });
 
 app.use('/api/users', userRoute);
-
 app.use('/api/auth', authRoute);
-
 app.use('/api/conversations', conversationRoute);
-
 app.use('/api/messages', messageRoute);
 
+const rooms = {};
+const userRoomPairs = {};
 io.on("connection", (socket) => {
     socket.emit("me", socket.id);
 
+    socket.on("user-wants-to-join", (roomId) => {
+        if(rooms[roomId]){
+            socket.emit("join-response", rooms[roomId].length);
+        }
+        else{
+            socket.emit("join-response", 0);
+        }
+    });
+
+    socket.on("user-joined", ({roomId, userId}) => {
+        // const roomId = data.roomId;
+        // const userId = data.userId;
+        userRoomPairs[userId] = roomId;
+        if(rooms[roomId]){
+            rooms[roomId].push(userId);
+        }
+        else{
+            rooms[roomId] = [userId];
+        }
+        console.log(rooms);
+    });
+
+    socket.on("other-user-id", (roomId) => {
+        const otherUser = rooms[roomId][0];
+        socket.emit("other-user", otherUser);
+    })
+
     socket.on("disconnect", () => {
+        const room = userRoomPairs[socket.id]
+        if(rooms[room]){
+            const index = rooms[room].indexOf(socket.id);
+            if(index !== -1){
+                rooms[room].splice(index, 1);
+            }
+            delete userRoomPairs[socket.id];
+        }
         socket.broadcast.emit("callEnded.");
+        console.log(rooms);
     });
 
     socket.on("callUser", ({ userToCall, signalData, from, name }) => {

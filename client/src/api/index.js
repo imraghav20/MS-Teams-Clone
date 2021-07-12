@@ -20,3 +20,5 @@ export const createConversation = (newConvo) => API.post('/conversations', newCo
 export const getUserConversation = (chatId) => API.get(`/conversations/${chatId}`);
 
 export const sendMessage = (newMessage) => API.post('/messages', newMessage);
+
+export const addConversation = (chatId) => API.post(`/users/${chatId}`);

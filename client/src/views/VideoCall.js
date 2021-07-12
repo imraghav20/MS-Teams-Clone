@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const VideoCall = () => {
-    const { name, callAccepted, callStarted, setCallStarted, myVideo, userVideo, callEnded, stream, call } = useContext(SocketContext);
+    const { name, callAccepted, callStarted, startCall, myVideo, userVideo, callEnded, stream, call } = useContext(SocketContext);
     const classes = useStyles();
     const [meetingName, setMeetingName] = useState("");
 
@@ -72,7 +72,7 @@ const VideoCall = () => {
                 {
                     !callAccepted && !callStarted && (<Grid container xs={6} direction='column' justify='center' align='center'>
                         <Typography variant='h4' gutterBottom>{meetingName}</Typography>
-                        <Button variant="contained" onClick={() => { setCallStarted(true); }} startIcon={<Phone fontSize="large" />} className={classes.button}>
+                        <Button variant="contained" onClick={() => { startCall() }} startIcon={<Phone fontSize="large" />} className={classes.button}>
                             Join Call
                         </Button>
                     </Grid>)

@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Paper, Typography, Grid, Button, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
-import { createConversation, getConversation } from '../actions/conversation';
+import { createConversation } from '../actions/conversation';
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -17,10 +16,9 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-const ChatTopBar = ({convoName, chatId}) => {
+const ChatTopBar = ({ convoName, chatId }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const history = useHistory();
 
     const [isFormVisible, setIsFormVisible] = useState(false);
     const [formData, setFormData] = useState({
@@ -34,7 +32,8 @@ const ChatTopBar = ({convoName, chatId}) => {
     }
 
     const redirectToVideo = () => {
-        history.push('/video-call/' + chatId);
+        const win = window.open('/video-call/' + chatId);
+        win.focus();
     }
 
     return (
@@ -50,7 +49,7 @@ const ChatTopBar = ({convoName, chatId}) => {
 
                     </Grid>
                     <Grid item xs={4}>
-                        <Button className={classes.button} variant='contained'  onClick={redirectToVideo}>Join Call</Button>
+                        <Button className={classes.button} variant='contained' onClick={redirectToVideo}>Join Call</Button>
                         <Button className={classes.button} variant='contained' onClick={() => setIsFormVisible(!isFormVisible)}>New Meeting</Button>
                     </Grid>
                 </Grid>

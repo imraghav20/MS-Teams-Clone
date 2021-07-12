@@ -5,6 +5,8 @@ import Peer from 'simple-peer';
 
 import sound from './assets/ding.mp3';
 
+import { addConversation } from './api/index';
+
 const SocketContext = createContext();
 
 // const socket = io('https://video-chat-app-imraghav20.herokuapp.com/');
@@ -23,7 +25,9 @@ const ContextProvider = ({ children }) => {
     const [callEnded, setCallEnded] = useState(false);
     const [name, setName] = useState('');
     const [chatVisibility, setChatVisibility] = useState(false);
+    const [callFull, setCallFull] = useState(false);
 
+    const roomId = useRef(window.location.pathname.replace('/video-call/', ''));
     const myVideo = useRef();
     const userVideo = useRef();
     const connectionRef = useRef();
@@ -50,15 +54,45 @@ const ContextProvider = ({ children }) => {
             
             setName(user.result.name);
 
+            const res = addConversation(roomId.current);
+
             socket.on('me', (id) => {
                 setMe(id);
             });
 
             socket.on('callUser', ({ from, name: callerName, signal }) => {
                 setCall({ isReceivedCall: true, from, name: callerName, signal });
-            })
+            });
         }
     }, [location]);
+
+    const startCall = () => {
+        socket.emit('user-wants-to-join', roomId.current);
+        
+        socket.on("join-response", num => {
+
+            if(num === 0){
+                setCallFull(false);
+                setCallStarted(true);
+                socket.emit("user-joined", {userId: me, roomId: roomId.current});
+            }
+
+            if(num === 1){
+                setCallFull(false);
+                socket.emit("other-user-id", roomId.current);
+                socket.on("other-user", otherUserId => {
+                    setCallStarted(true);
+                    setCallJoined(true);
+                    callUser(otherUserId);
+                });
+            }
+
+            if(num >= 2){
+                console.log(num);
+                setCallFull(true);
+            }
+        });
+    }
 
     const answerCall = () => {
         setCallAccepted(true);
@@ -66,9 +100,10 @@ const ContextProvider = ({ children }) => {
         const peer = new Peer({ initiator: false, trickle: false, stream });
 
         peer.on('signal', (data) => {
+            socket.emit("user-joined", {userId: call.from, roomId: roomId.current});
             socket.emit('answerCall', { signal: data, to: call.from, from: name });
             messageRef.current.push(
-                { message: call.name + " joined the chat.", position: "middle" }
+                { text: call.name + " joined the chat." }
             );
             audio.current.play();
         });
@@ -125,7 +160,9 @@ const ContextProvider = ({ children }) => {
     const leaveCall = () => {
         setCallEnded(true);
 
-        connectionRef.current.destroy();
+        if(connectionRef.current){
+            connectionRef.current.destroy();
+        }
 
         window.location.reload();
     };
@@ -137,6 +174,7 @@ const ContextProvider = ({ children }) => {
             callStarted,
             setCallStarted,
             callJoined,
+            callFull,
             setCallJoined,
             myVideo,
             userVideo,
@@ -150,6 +188,7 @@ const ContextProvider = ({ children }) => {
             setName,
             callEnded,
             me,
+            startCall,
             callUser,
             leaveCall,
             answerCall

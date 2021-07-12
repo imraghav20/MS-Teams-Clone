@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Notifications = () => {
-    const { answerCall, call, callAccepted, callJoined } = useContext(SocketContext);
+    const { answerCall, call, callAccepted, callJoined, callFull } = useContext(SocketContext);
     const classes = useStyles();
     return (
         <div className={classes.notification}>
@@ -36,6 +36,12 @@ const Notifications = () => {
             {callJoined && !callAccepted && (
                 <Paper className={classes.paper}>
                     <h1>Waiting for host to let you in...</h1>
+                </Paper>
+            )}
+
+            {callFull && (
+                <Paper className={classes.paper}>
+                    <h1>The call is currently full. Please join later.</h1>
                 </Paper>
             )}
         </div>
