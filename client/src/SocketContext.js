@@ -79,9 +79,8 @@ const ContextProvider = ({ children }) => {
 
         peer.on('data', (data) => {
             let str = new TextDecoder("utf-8").decode(data);
-            messageRef.current.push(
-                { message: str, position: "left" }
-            );
+            let obj = JSON.parse(str);
+            messageRef.current.push(obj);
             setChatVisibility(false);
             setChatVisibility(true);
             audio.current.play();
@@ -104,9 +103,8 @@ const ContextProvider = ({ children }) => {
 
         peer.on('data', (data) => {
             let str = new TextDecoder("utf-8").decode(data);
-            messageRef.current.push(
-                { message: str, position: "left" }
-            );
+            let obj = JSON.parse(str);
+            messageRef.current.push(obj);
             setChatVisibility(false);
             setChatVisibility(true);
             audio.current.play();
