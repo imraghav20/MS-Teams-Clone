@@ -1,15 +1,20 @@
 import React, { createContext, useState, useRef, useEffect } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import Peer from 'simple-peer';
 
 import sound from './assets/ding.mp3';
 
+import { addConversation } from './api/index';
+
 const SocketContext = createContext();
 
-const socket = io('https://video-chat-app-imraghav20.herokuapp.com/');
-// const socket = io('http://localhost:5000/');
+// const socket = io('https://video-chat-app-imraghav20.herokuapp.com/');
+const socket = io('http://localhost:5000/');
 
 const ContextProvider = ({ children }) => {
+    const [user, setUser] = useState(JSON.parse(localStorage.getItem('profile')));
+
     const [stream, setStream] = useState(null);
     const [videoStream, setVideoStream] = useState(null);
     const [me, setMe] = useState('');
@@ -20,30 +25,74 @@ const ContextProvider = ({ children }) => {
     const [callEnded, setCallEnded] = useState(false);
     const [name, setName] = useState('');
     const [chatVisibility, setChatVisibility] = useState(false);
+    const [callFull, setCallFull] = useState(false);
 
+    const roomId = useRef(window.location.pathname.replace('/video-call/', ''));
     const myVideo = useRef();
     const userVideo = useRef();
     const connectionRef = useRef();
     const messageRef = useRef([]);
     const audio = useRef(new Audio(sound));
 
-    useEffect(() => {
-        navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-            .then((currentStream) => {
-                setStream(currentStream);
+    const location = useLocation();
+    const history = useHistory();
 
-                myVideo.current.srcObject = currentStream;
-                setVideoStream(currentStream);
+    useEffect(() => {
+        const token = user?.token;
+        if (!token) {
+            history.push('/auth');
+            setUser(null);
+        }
+        else {
+            navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+                .then((currentStream) => {
+                    setStream(currentStream);
+
+                    myVideo.current.srcObject = currentStream;
+                    setVideoStream(currentStream);
+                });
+            
+            setName(user.result.name);
+
+            const res = addConversation(roomId.current);
+
+            socket.on('me', (id) => {
+                setMe(id);
             });
 
-        socket.on('me', (id) => {
-            setMe(id);
-        });
+            socket.on('callUser', ({ from, name: callerName, signal }) => {
+                setCall({ isReceivedCall: true, from, name: callerName, signal });
+            });
+        }
+    }, [location]);
 
-        socket.on('callUser', ({ from, name: callerName, signal }) => {
-            setCall({ isReceivedCall: true, from, name: callerName, signal });
-        })
-    }, []);
+    const startCall = () => {
+        socket.emit('user-wants-to-join', roomId.current);
+        
+        socket.on("join-response", num => {
+
+            if(num === 0){
+                setCallFull(false);
+                setCallStarted(true);
+                socket.emit("user-joined", {userId: me, roomId: roomId.current});
+            }
+
+            if(num === 1){
+                setCallFull(false);
+                socket.emit("other-user-id", roomId.current);
+                socket.on("other-user", otherUserId => {
+                    setCallStarted(true);
+                    setCallJoined(true);
+                    callUser(otherUserId);
+                });
+            }
+
+            if(num >= 2){
+                console.log(num);
+                setCallFull(true);
+            }
+        });
+    }
 
     const answerCall = () => {
         setCallAccepted(true);
@@ -51,9 +100,10 @@ const ContextProvider = ({ children }) => {
         const peer = new Peer({ initiator: false, trickle: false, stream });
 
         peer.on('signal', (data) => {
+            socket.emit("user-joined", {userId: call.from, roomId: roomId.current});
             socket.emit('answerCall', { signal: data, to: call.from, from: name });
             messageRef.current.push(
-                { message: call.name + " joined the chat.", position: "middle" }
+                { text: call.name + " joined the chat." }
             );
             audio.current.play();
         });
@@ -64,9 +114,8 @@ const ContextProvider = ({ children }) => {
 
         peer.on('data', (data) => {
             let str = new TextDecoder("utf-8").decode(data);
-            messageRef.current.push(
-                { message: str, position: "left" }
-            );
+            let obj = JSON.parse(str);
+            messageRef.current.push(obj);
             setChatVisibility(false);
             setChatVisibility(true);
             audio.current.play();
@@ -89,9 +138,8 @@ const ContextProvider = ({ children }) => {
 
         peer.on('data', (data) => {
             let str = new TextDecoder("utf-8").decode(data);
-            messageRef.current.push(
-                { message: str, position: "left" }
-            );
+            let obj = JSON.parse(str);
+            messageRef.current.push(obj);
             setChatVisibility(false);
             setChatVisibility(true);
             audio.current.play();
@@ -112,7 +160,9 @@ const ContextProvider = ({ children }) => {
     const leaveCall = () => {
         setCallEnded(true);
 
-        connectionRef.current.destroy();
+        if(connectionRef.current){
+            connectionRef.current.destroy();
+        }
 
         window.location.reload();
     };
@@ -124,6 +174,7 @@ const ContextProvider = ({ children }) => {
             callStarted,
             setCallStarted,
             callJoined,
+            callFull,
             setCallJoined,
             myVideo,
             userVideo,
@@ -137,6 +188,7 @@ const ContextProvider = ({ children }) => {
             setName,
             callEnded,
             me,
+            startCall,
             callUser,
             leaveCall,
             answerCall

@@ -68,7 +68,9 @@ const CallSettings = () => {
             .then((currentStream) => {
                 setShareStream(currentStream);
 
-                connectionRef.current.replaceTrack(stream.getTracks()[1], currentStream.getTracks()[0], stream);
+                if (connectionRef.current) {
+                    connectionRef.current.replaceTrack(stream.getTracks()[1], currentStream.getTracks()[0], stream);
+                }
 
                 myVideo.current.srcObject = currentStream;
                 setShareScreen(true);
@@ -80,7 +82,9 @@ const CallSettings = () => {
     }
 
     const stopSharingScreen = () => {
-        connectionRef.current.replaceTrack(stream.getTracks()[1], videoStream.getTracks()[1], stream);
+        if (connectionRef.current) {
+            connectionRef.current.replaceTrack(stream.getTracks()[1], videoStream.getTracks()[1], stream);
+        }
         myVideo.current.srcObject = videoStream;
 
         if (shareStream) {
