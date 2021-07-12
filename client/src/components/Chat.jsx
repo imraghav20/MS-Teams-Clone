@@ -1,9 +1,12 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Tooltip, IconButton, Paper, TextField } from '@material-ui/core';
 import { Send } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { SocketContext } from '../SocketContext';
+import { getUserConversation } from '../api/index';
+
+import Message from './Message';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -54,15 +57,33 @@ const Chat = () => {
     const { chatVisibility, messageRef, connectionRef, name } = useContext(SocketContext);
     const classes = useStyles();
     const [message, setMessage] = useState('');
-    
+
+    useEffect(() => {
+        const getMessages = async () => {
+            const chatId = window.location.pathname.replace('/video-call/', '');
+            const chat = await getUserConversation(chatId);
+            console.log(chat.data.messages);
+            messageRef.current = chat.data.messages;
+        }
+        getMessages();
+    }, []);
+
     const sendMessage = () => {
         if (message) {
-            messageRef.current.push(
-                { message: message, position: "right" }
-            );
+            const date = new Date();
+
+            const msg =  {
+                text: message,
+                senderName: name,
+                senderId: JSON.parse(localStorage.getItem('profile')).result._id,
+                createdAt: date.toISOString()
+            }
+            
+            messageRef.current.push(msg);
 
             if (connectionRef.current) {
-                connectionRef.current.send(name + ": " + message);
+                // connectionRef.current.send(name + ": " + message);
+                connectionRef.current.send(msg);
             }
 
             setMessage('');
@@ -75,10 +96,9 @@ const Chat = () => {
                 chatVisibility && (
                     <Paper className={classes.paper}>
                         <div id="chat-container" className={classes.chatContainer}>
-                            {/* <div className={[classes.message, classes.middle].join(' ')}>Hi! How are you?</div> */}
-                            {messageRef.current.map((msg) => (msg.position === "middle") ? <div className={[classes.message, classes.middle].join(' ')}>{msg.message}</div>
-                                : (msg.position === "left") ? <div className={[classes.message, classes.left].join(' ')}>{msg.message}</div>
-                                    : <div className={[classes.message, classes.right].join(' ')}>{msg.message}</div>)}
+                            {
+                                messageRef.current.map((msg) => <Message msg={msg} />)
+                            }
                         </div>
                         <form action='#' autoComplete="off">
                             <TextField label="Type Message" value={message} name="messageInp" id="messageInp" className={classes.messageField} onChange={(e) => setMessage(e.target.value)} />

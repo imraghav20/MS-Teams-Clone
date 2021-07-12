@@ -4,7 +4,7 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import TopBar from './components/TopBar';
 
 import Auth from './views/Auth';
-import Home from './views/Home';
+import VideoCall from './views/VideoCall';
 import Chat from './views/Chat';
 
 import { ContextProvider } from './SocketContext';
@@ -17,7 +17,7 @@ const App = () => {
                 <Switch>
                     <Route path='/video-call/:id' exact>
                         <ContextProvider>
-                            <Home />
+                            <VideoCall />
                         </ContextProvider>
                     </Route>
                     <Route path='/auth' exact component={Auth} />

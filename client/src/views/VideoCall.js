@@ -1,5 +1,6 @@
-import React, { useContext } from 'react';
-import { Typography, Grid } from '@material-ui/core';
+import React, { useContext, useEffect, useState } from 'react';
+import { Button, Typography, Grid } from '@material-ui/core';
+import { Phone } from '@material-ui/icons'
 import { makeStyles } from '@material-ui/core/styles';
 
 import CallForm from '../components/CallForm';
@@ -8,6 +9,7 @@ import Notifications from '../components/Notifications';
 import Chat from '../components/Chat';
 
 import { SocketContext } from '../SocketContext';
+import { getUserConversation } from '../api/index';
 
 const useStyles = makeStyles((theme) => ({
     wrapper: {
@@ -28,14 +30,31 @@ const useStyles = makeStyles((theme) => ({
         zIndex: '1000',
         position: 'absolute',
         border: '2px solid black',
-        background: '#6264a7',
+        background: '#eeeeee',
         padding: '5px 5px'
+    },
+    button: {
+        marginTop: 10,
+        marginRight: 'auto',
+        marginLeft: 'auto',
+        width: 'fit-content'
     },
 }))
 
-const Home = () => {
-    const { name, callAccepted, callStarted, myVideo, userVideo, callEnded, stream, call } = useContext(SocketContext);
+const VideoCall = () => {
+    const { name, callAccepted, callStarted, setCallStarted, myVideo, userVideo, callEnded, stream, call } = useContext(SocketContext);
     const classes = useStyles();
+    const [meetingName, setMeetingName] = useState("");
+
+    useEffect(() => {
+        const getMeetName = async () => {
+            const roomId = window.location.pathname.replace('/video-call/', '');
+            const chat = await getUserConversation(roomId);
+            setMeetingName(chat.data.conversation.conversationName);
+        }
+
+        getMeetName();
+    }, []);
 
     return (
         <div>
@@ -51,8 +70,11 @@ const Home = () => {
                     }
                 </Grid>
                 {
-                    !callAccepted && !callStarted && (<Grid container xs={6} direction='column' justify='center'>
-                        <CallForm />
+                    !callAccepted && !callStarted && (<Grid container xs={6} direction='column' justify='center' align='center'>
+                        <Typography variant='h4' gutterBottom>{meetingName}</Typography>
+                        <Button variant="contained" onClick={() => { setCallStarted(true); }} startIcon={<Phone fontSize="large" />} className={classes.button}>
+                            Join Call
+                        </Button>
                     </Grid>)
                 }
                 {
@@ -71,4 +93,4 @@ const Home = () => {
     );
 };
 
-export default Home;
+export default VideoCall;

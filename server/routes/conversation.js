@@ -21,6 +21,9 @@ router.get('/', auth, async (req, res) => {
             i += 1;
 
             if (i === chatRooms.length) {
+                allUserConvos.sort((a, b) => {
+                    return b.createdAt - a.createdAt;
+                });
                 res.status(200).json(allUserConvos);
             }
         });
@@ -76,6 +79,9 @@ router.get('/:chatId', auth, async (req, res) => {
             i += 1;
 
             if (i === msgIds.length) {
+                messages.sort((a, b) => {
+                    return a.createdAt - b.createdAt;
+                });
                 res.status(200).json({ conversation: convo, messages });
             }
         });
