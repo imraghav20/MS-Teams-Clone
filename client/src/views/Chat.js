@@ -74,11 +74,19 @@ const Chat = () => {
     const conversations = useSelector((state) => state.conversation);
 
     const [currentChatId, setCurrentChatId] = useState("");
+    const [flag, setFlag] = useState(false);
 
     useEffect(() => {
         const getMessages = async () => {
             try {
-                dispatch(getConversation(currentChatId));
+                setFlag(false);
+                dispatch(getConversation(currentChatId))
+                .then(() => {
+                    const chat =  JSON.parse(localStorage.getItem('currentChat'));
+                    if(chat.conversation){
+                        setFlag(true);
+                    }
+                })
             } catch (error) {
                 console.log(error);
             }
@@ -134,8 +142,8 @@ const Chat = () => {
             <div className={classes.chatBox}>
                 <div className={classes.chatBoxWrapper}>
                     {
-                        !currentChatId ? <div></div>
-                            : (<ChatTopBar convoName={conversation.conversation ? conversation.conversation.conversationName : ""} />)
+                        !flag ? <div></div>
+                            : (<ChatTopBar convoName={conversation.conversation ? conversation.conversation.conversationName : ""} chatId={currentChatId}/>)
                     }
                     <div className={classes.chatBoxTop}>
                         {
@@ -158,7 +166,7 @@ const Chat = () => {
                                 : (
                                     <div>
                                         {
-                                            (!conversation.messages || !conversation.messages.length) ? <></>
+                                            (!flag || !conversation.messages || !conversation.messages.length) ? <></>
                                                 : (
                                                     conversation.messages.map((msg) => (
                                                         <Message msg={msg} />
@@ -170,7 +178,7 @@ const Chat = () => {
                         }
                     </div>
                     {
-                        !currentChatId ? <div></div>
+                        (!flag || !currentChatId) ? <div></div>
                             : (
                                 <div className={classes.chatBoxBottom}>
                                     <Grid container direction='row'>

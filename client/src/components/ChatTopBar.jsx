@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { Paper, Typography, Grid, Button, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -16,9 +17,10 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-const ChatTopBar = ({convoName}) => {
+const ChatTopBar = ({convoName, chatId}) => {
     const classes = useStyles();
     const dispatch = useDispatch();
+    const history = useHistory();
 
     const [isFormVisible, setIsFormVisible] = useState(false);
     const [formData, setFormData] = useState({
@@ -28,6 +30,11 @@ const ChatTopBar = ({convoName}) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         dispatch(createConversation(formData));
+        setFormData({ ...formData, conversationName: "" });
+    }
+
+    const redirectToVideo = () => {
+        history.push('/video-call/' + chatId);
     }
 
     return (
@@ -43,7 +50,7 @@ const ChatTopBar = ({convoName}) => {
 
                     </Grid>
                     <Grid item xs={4}>
-                        <Button className={classes.button} variant='contained'>Join Call</Button>
+                        <Button className={classes.button} variant='contained'  onClick={redirectToVideo}>Join Call</Button>
                         <Button className={classes.button} variant='contained' onClick={() => setIsFormVisible(!isFormVisible)}>New Meeting</Button>
                     </Grid>
                 </Grid>

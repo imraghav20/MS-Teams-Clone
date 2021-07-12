@@ -15,13 +15,13 @@ const App = () => {
             <BrowserRouter>
                 <TopBar />
                 <Switch>
-                    <Route path='/' exact>
+                    <Route path='/video-call/:id' exact>
                         <ContextProvider>
                             <Home />
                         </ContextProvider>
                     </Route>
                     <Route path='/auth' exact component={Auth} />
-                    <Route path='/chats' exact component={Chat} />
+                    <Route path='/' exact component={Chat} />
                 </Switch>
             </BrowserRouter>
         </div>
