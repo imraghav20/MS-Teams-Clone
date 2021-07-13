@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/MS-Teams-Clone/static/css/main.5c6932ca.chunk.css",
-    "main.js": "/MS-Teams-Clone/static/js/main.b639543e.chunk.js",
-    "main.js.map": "/MS-Teams-Clone/static/js/main.b639543e.chunk.js.map",
+    "main.js": "/MS-Teams-Clone/static/js/main.3df05260.chunk.js",
+    "main.js.map": "/MS-Teams-Clone/static/js/main.3df05260.chunk.js.map",
     "runtime-main.js": "/MS-Teams-Clone/static/js/runtime-main.de02c46c.js",
     "runtime-main.js.map": "/MS-Teams-Clone/static/js/runtime-main.de02c46c.js.map",
     "static/js/2.c180fb1a.chunk.js": "/MS-Teams-Clone/static/js/2.c180fb1a.chunk.js",
@@ -17,6 +17,6 @@
     "static/js/runtime-main.de02c46c.js",
     "static/js/2.c180fb1a.chunk.js",
     "static/css/main.5c6932ca.chunk.css",
-    "static/js/main.b639543e.chunk.js"
+    "static/js/main.3df05260.chunk.js"
   ]
 }
