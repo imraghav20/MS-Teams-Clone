@@ -55,8 +55,6 @@ io.on("connection", (socket) => {
     });
 
     socket.on("user-joined", ({roomId, userId}) => {
-        // const roomId = data.roomId;
-        // const userId = data.userId;
         userRoomPairs[userId] = roomId;
         if(rooms[roomId]){
             rooms[roomId].push(userId);
@@ -64,7 +62,6 @@ io.on("connection", (socket) => {
         else{
             rooms[roomId] = [userId];
         }
-        console.log(rooms);
     });
 
     socket.on("other-user-id", (roomId) => {
@@ -81,8 +78,10 @@ io.on("connection", (socket) => {
             }
             delete userRoomPairs[socket.id];
         }
-        socket.broadcast.emit("callEnded.");
-        console.log(rooms);
+
+        if(rooms[room]){
+            io.to(rooms[room][0]).emit("callEnded");
+        }
     });
 
     socket.on("callUser", ({ userToCall, signalData, from, name }) => {

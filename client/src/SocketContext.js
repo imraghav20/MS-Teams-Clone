@@ -63,6 +63,15 @@ const ContextProvider = ({ children }) => {
             socket.on('callUser', ({ from, name: callerName, signal }) => {
                 setCall({ isReceivedCall: true, from, name: callerName, signal });
             });
+
+            socket.on("callEnded", () => {
+                connectionRef.current = null;
+                setCallEnded(true);
+                setCallAccepted(false);
+                setCallJoined(false);
+                setCallStarted(true);
+                setCallEnded(false);
+            });
         }
     }, [location]);
 
