@@ -155,8 +155,8 @@ const CallSettings = () => {
                                         </Tooltip>
                                     )
                                 }
-                                <Tooltip title='Copy Meet ID'>
-                                    <CopyToClipboard text={me}>
+                                <Tooltip title='Copy Meet Link'>
+                                    <CopyToClipboard text={window.location.href}>
                                         <IconButton>
                                             <Assignment fontSize="large" style={{ fill: "white" }} />
                                         </IconButton>

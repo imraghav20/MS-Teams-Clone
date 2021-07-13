@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
 import { Typography, Button, TextField, Grid, Paper } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { Send } from '@material-ui/icons';
@@ -63,8 +64,18 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const Chat = () => {
+    const [user, setUser] = useState(JSON.parse(localStorage.getItem('profile')));
     const classes = useStyles();
     const dispatch = useDispatch();
+    const history = useHistory();
+
+    useEffect(() => {
+        const token = user?.token;
+        if (!token) {
+            history.push('/auth');
+            setUser(null);
+        }
+    });
 
     useEffect(() => {
         dispatch(getUserConversations());
