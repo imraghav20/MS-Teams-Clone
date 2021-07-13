@@ -15,6 +15,7 @@ const App = () => {
             <HashRouter>
                 <TopBar />
                 <Switch>
+                    {/* routing to various views */}
                     <Route path='/video-call/:id' exact>
                         <ContextProvider>
                             <VideoCall />

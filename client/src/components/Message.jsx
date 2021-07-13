@@ -38,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
+// message component in conversations which takes the message object as prop
 const Message = ({msg}) => {
     const classes = useStyles();
     const user = JSON.parse(localStorage.getItem('profile'));

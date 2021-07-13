@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Participants = () => {
     const { participantsRef, participantsVisible } = useContext(SocketContext);
-    console.log(participantsRef.current);
+
     const classes = useStyles();
 
     return (

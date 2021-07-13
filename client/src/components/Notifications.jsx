@@ -15,10 +15,12 @@ const useStyles = makeStyles((theme) => ({
     paper: {
         display: 'flex',
         justifyContent: 'center',
-        padding: '10px'
+        padding: '10px',
+        fontFamily: 'sans-serif'
     }
 }));
 
+// component used to pop notifications to users depending on context
 const Notifications = () => {
     const { answerCall, call, callAccepted, callJoined, callFull } = useContext(SocketContext);
     const classes = useStyles();

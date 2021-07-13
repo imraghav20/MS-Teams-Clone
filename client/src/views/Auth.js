@@ -49,12 +49,13 @@ const initialState = { firstName: '', lastName: '', email: '', password: '', con
 
 const Auth = () => {
     const classes = useStyles();
-    const [formData, setFormData] = useState(initialState);
-    const [showPassword, setShowPassword] = useState(false);
-    const [isSignUp, setIsSignUp] = useState(false);
+    const [formData, setFormData] = useState(initialState);  // login/signup data
+    const [showPassword, setShowPassword] = useState(false);  // showpassword icon vidible or not
+    const [isSignUp, setIsSignUp] = useState(false);  // change form depending on whether user wants to sign up or log in
     const dispatch = useDispatch();
     const history = useHistory();
 
+    // on form submission
     const handleSubmit = (e) => {
         e.preventDefault();
 

@@ -10,6 +10,7 @@ import './styles.css';
 
 import { reducers } from './reducers';
 
+// redux thunk store
 const store = createStore(reducers, compose(applyMiddleware(thunk)));
 
 ReactDOM.render(

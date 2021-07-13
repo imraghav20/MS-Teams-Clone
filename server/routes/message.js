@@ -12,21 +12,21 @@ router.post('/', auth, async (req, res) => {
 
     try {
         const convoId = req.body.convoId;
-        const conversation = await Conversation.findById(convoId);
+        const conversation = await Conversation.findById(convoId);  // find conversation to which message belongs
 
         const user = await User.findById(req.userId);
-        const senderName = user.name;
+        const senderName = user.name;  // get senderName
 
         const newMessage = Message({
             text: req.body.message,
             senderName: senderName,
             senderId: req.userId
-        });
+        });  // create new message
 
-        const savedMessage = await newMessage.save();
+        const savedMessage = await newMessage.save();  // save new message
         const msgId = savedMessage._id;
 
-        conversation.messages.push(msgId);
+        conversation.messages.push(msgId);  // push new message id to conversation
         const result = await conversation.save();
 
         res.status(200).json(savedMessage);

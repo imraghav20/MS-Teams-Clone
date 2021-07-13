@@ -1,6 +1,7 @@
 const AUTH = "AUTH";
 const LOGOUT = "LOGOUT";
 
+// authreducre to handle AUTH and LOGOUT action types
 const authReducer = (state = {authData: null}, action) => {
     switch(action.type){
         case AUTH:

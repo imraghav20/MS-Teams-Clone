@@ -1,5 +1,6 @@
 const SEND = "SEND";
 
+// messageReducer to handle sending messages call
 const messageReducer = (state = [], action) => {
     switch(action.type) {
         case SEND:

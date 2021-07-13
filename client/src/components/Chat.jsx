@@ -55,6 +55,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+// chat component that is present within the video call (not in conversation)
 const Chat = () => {
     const { chatVisibility, messageRef, connectionRef, name } = useContext(SocketContext);
     const dispatch = useDispatch();
@@ -62,25 +63,27 @@ const Chat = () => {
     const [message, setMessage] = useState('');
 
     useEffect(() => {
+        // get previous messages for the corresponding chat
         const getMessages = async () => {
             const chatId = window.location.hash.replace('#/video-call/', '');
             const chat = await getUserConversation(chatId);
             messageRef.current = chat.data.messages;
         }
         getMessages();
-    }, []);
+    }, [messageRef]);
 
+    // sending our message to peer and also save in database
     const sendUserMessage = () => {
         if (message) {
             const date = new Date();
 
-            const msg =  {
+            const msg = {
                 text: message,
                 senderName: name,
                 senderId: JSON.parse(localStorage.getItem('profile')).result._id,
                 createdAt: date.toISOString()
             }
-            
+
             messageRef.current.push(msg);
 
             if (connectionRef.current) {

@@ -2,6 +2,7 @@ import axios from 'axios';
 
 const API = axios.create({baseURL: "https://video-chat-app-imraghav20.herokuapp.com/api"});
 
+// add authentication token in request headers for the auth middleware
 API.interceptors.request.use((req) => {
     if(localStorage.getItem("profile")){
         req.headers.Authorization = `Bearer ${JSON.parse(localStorage.getItem("profile")).token}`;

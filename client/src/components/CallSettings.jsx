@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import { AppBar, Toolbar, IconButton, Tooltip } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { VideocamOff, Videocam, Mic, MicOff, ScreenShare, StopScreenShare, PanTool, Chat, People, PhoneDisabled, Assignment } from '@material-ui/icons';
+import PanToolOutlinedIcon from '@material-ui/icons/PanToolOutlined';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import { SocketContext } from '../SocketContext';
@@ -41,37 +42,45 @@ const CallSettings = () => {
     const [videoOn, setVideoOn] = useState(true);
     const [audioOn, setAudioOn] = useState(true);
     const [shareScreen, setShareScreen] = useState(false);
-    const [shareStream, setShareStream] = useState(null);
+    const [shareStream, setShareStream] = useState(null);  // to keep track of screen sharing stream
+    const [handRaised, setHandRaised] = useState(false);
 
+    // turn off camera
     const offCamera = () => {
         var vidTrack = stream.getVideoTracks();
         vidTrack.forEach(track => track.enabled = false);
     }
 
+    // turn on camera
     const onCamera = () => {
         var vidTrack = stream.getVideoTracks();
         vidTrack.forEach(track => track.enabled = true);
     }
 
+    // turn off mic
     const offMic = () => {
         var audTrack = stream.getAudioTracks();
         audTrack.forEach(track => track.enabled = false);
     }
 
+    // turn on mic
     const onMic = () => {
         var audTrack = stream.getAudioTracks();
         audTrack.forEach(track => track.enabled = true);
     }
 
+    // share user screen
     const shareUserScreen = () => {
         navigator.mediaDevices.getDisplayMedia({ cursor: true })
             .then((currentStream) => {
                 setShareStream(currentStream);
 
+                // replace video track in peer stream with screen sharing stream track
                 if (connectionRef.current) {
                     connectionRef.current.replaceTrack(stream.getTracks()[1], currentStream.getTracks()[0], stream);
                 }
 
+                // replace video for own user
                 myVideo.current.srcObject = currentStream;
                 setShareScreen(true);
 
@@ -81,6 +90,7 @@ const CallSettings = () => {
             });
     }
 
+    // stop screen sharing
     const stopSharingScreen = () => {
         if (connectionRef.current) {
             connectionRef.current.replaceTrack(stream.getTracks()[1], videoStream.getTracks()[1], stream);
@@ -92,6 +102,10 @@ const CallSettings = () => {
         }
 
         setShareScreen(false);
+    }
+
+    const handleHand = () => {
+        setHandRaised(!handRaised);
     }
 
     const showParticipants = () => {
@@ -172,11 +186,24 @@ const CallSettings = () => {
                                         </IconButton>
                                     </CopyToClipboard>
                                 </Tooltip>
-                                <Tooltip title='Raise Hand'>
-                                    <IconButton>
-                                        <PanTool fontSize="large" style={{ fill: "white" }} />
-                                    </IconButton>
-                                </Tooltip>
+                                {
+                                    !handRaised && (
+                                        <Tooltip title='Raise Hand'>
+                                            <IconButton onClick={() => handleHand()}>
+                                                <PanToolOutlinedIcon fontSize="large" style={{ fill: "white" }} />
+                                            </IconButton>
+                                        </Tooltip>
+                                    )
+                                }
+                                {
+                                    handRaised && (
+                                        <Tooltip title='Lower Hand'>
+                                            <IconButton onClick={() => handleHand()}>
+                                                <PanTool fontSize="large" style={{ fill: "white" }} />
+                                            </IconButton>
+                                        </Tooltip>
+                                    )
+                                }
                                 <Tooltip title='Show Conversation'>
                                     <IconButton onClick={() => { showChats() }}>
                                         <Chat fontSize="large" style={{ fill: "white" }} />

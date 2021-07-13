@@ -70,24 +70,27 @@ const Chat = () => {
     const history = useHistory();
 
     useEffect(() => {
+        // check if user is logged in
         const token = user?.token;
         if (!token) {
             history.push('/auth');
             setUser(null);
         }
-    });
+    }, [user?.token, history]);
 
     useEffect(() => {
+        // get all user conversations via API call
         dispatch(getUserConversations());
         localStorage.removeItem("currentChat");
     }, [dispatch]);
 
     const conversations = useSelector((state) => state.conversation);
 
-    const [currentChatId, setCurrentChatId] = useState("");
-    const [flag, setFlag] = useState(false);
+    const [currentChatId, setCurrentChatId] = useState("");  // selected conversation id
+    const [flag, setFlag] = useState(false);  // keep track if currentChatId state has loaded or not
 
     useEffect(() => {
+        // get all messages of the conversation via API
         const getMessages = async () => {
             try {
                 setFlag(false);
@@ -108,20 +111,25 @@ const Chat = () => {
     const conversation = JSON.parse(localStorage.getItem('currentChat'));
 
     const [msg, setMsg] = useState("");
+
+    // sending message data
     const formMsgData = {
         message: msg,
         convoId: JSON.parse(localStorage.getItem('currentChat'))?.conversation?._id
     }
 
+    // create new conversation data
     const [formCallData, setFormCallData] = useState({
         conversationName: ""
     });
 
+    // create new call / conversation
     const handleCallSubmit = (e) => {
         e.preventDefault();
         dispatch(createConversation(formCallData));
     }
 
+    // send message
     const handleMessageSubmit = (e) => {
         e.preventDefault();
         dispatch(sendMessage(formMsgData));

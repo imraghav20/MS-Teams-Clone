@@ -3,7 +3,6 @@ import { Button, Typography, Grid } from '@material-ui/core';
 import { Phone } from '@material-ui/icons'
 import { makeStyles } from '@material-ui/core/styles';
 
-import CallForm from '../components/CallForm';
 import CallSettings from '../components/CallSettings';
 import Notifications from '../components/Notifications';
 import Chat from '../components/Chat';
@@ -45,9 +44,10 @@ const useStyles = makeStyles((theme) => ({
 const VideoCall = () => {
     const { name, callAccepted, callStarted, startCall, myVideo, userVideo, callEnded, stream, call } = useContext(SocketContext);
     const classes = useStyles();
-    const [meetingName, setMeetingName] = useState("");
+    const [meetingName, setMeetingName] = useState("");  // current meeting name
 
     useEffect(() => {
+        // use effect called to get the current meeting name
         const getMeetName = async () => {
             const roomId = window.location.hash.replace('#/video-call/', '');
             const chat = await getUserConversation(roomId);
@@ -62,6 +62,7 @@ const VideoCall = () => {
             <Grid container xs={12} direction='row' justify='center'>
                 <Grid container xs={6}>
                     {
+                        // our own video
                         stream && (
                             <Grid item xs={12} md={6}>
                                 <Typography className={classes.typography} variant='h5' gutterBottom>{name || 'Name'}</Typography>
@@ -71,6 +72,7 @@ const VideoCall = () => {
                     }
                 </Grid>
                 {
+                    // displays meeting name and join call button
                     !callAccepted && !callStarted && (<Grid container xs={6} direction='column' justify='center' align='center'>
                         <Typography variant='h4' gutterBottom>{meetingName}</Typography>
                         <Button variant="contained" onClick={() => { startCall() }} startIcon={<Phone fontSize="large" />} className={classes.button}>
@@ -79,6 +81,7 @@ const VideoCall = () => {
                     </Grid>)
                 }
                 {
+                    // other user's video 
                     callAccepted && !callEnded && (
                         <Grid item xs={12} md={6}>
                             <Typography className={classes.typography} variant='h5' gutterBottom>{call.name || 'Name'}</Typography>

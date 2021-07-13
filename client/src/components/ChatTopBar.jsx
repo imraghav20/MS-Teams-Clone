@@ -20,17 +20,20 @@ const ChatTopBar = ({ convoName, chatId }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
 
+    // form data for starting new conversation
     const [isFormVisible, setIsFormVisible] = useState(false);
     const [formData, setFormData] = useState({
         conversationName: ""
     });
 
+    // submit new conversation form data
     const handleSubmit = (e) => {
         e.preventDefault();
         dispatch(createConversation(formData));
         setFormData({ ...formData, conversationName: "" });
     }
 
+    // to join the corresponding video call to chat in new tab
     const redirectToVideo = () => {
         const win = window.open('/MS-Teams-Clone#/video-call/' + chatId);
         win.focus();

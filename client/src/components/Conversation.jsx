@@ -29,12 +29,13 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
+// conversation component which takes conversation name as prop
 const Conversation = (conversation) => {
     const classes = useStyles();
 
     return (
         <div className={classes.conversation}>
-            <img className={classes.conversationImg} src={chat_icon} />
+            <img className={classes.conversationImg} src={chat_icon} alt="Conversation Icon" />
             <span className={classes.conversationName}>{conversation.conversation.conversationName}</span>
         </div>
     );

@@ -2,6 +2,7 @@ const CREATE = "CREATE";
 const GET_ALL = "GET_ALL";
 const GET_CONVO = "GET_CONVO";
 
+// conversationReducer to handle various conversation API calls
 const conversationReducer = (state = [], action) => {
     switch(action.type){
         case CREATE:

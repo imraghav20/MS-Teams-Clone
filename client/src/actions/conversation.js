@@ -4,6 +4,8 @@ const GET_ALL = "GET_ALL";
 const CREATE = "CREATE";
 const GET_CONVO = "GET_CONVO";
 
+// dispatch action type and data to conversationReducer
+
 export const getUserConversations = () => async (dispatch) => {
     try {
         const { data } = await api.getConversations();
