@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { HashRouter, Switch, Route } from 'react-router-dom';
 
 import TopBar from './components/TopBar';
 
@@ -12,7 +12,7 @@ import { ContextProvider } from './SocketContext';
 const App = () => {
     return (
         <div>
-            <BrowserRouter>
+            <HashRouter>
                 <TopBar />
                 <Switch>
                     <Route path='/video-call/:id' exact>
@@ -23,7 +23,7 @@ const App = () => {
                     <Route path='/auth' exact component={Auth} />
                     <Route path='/' exact component={Chat} />
                 </Switch>
-            </BrowserRouter>
+            </HashRouter>
         </div>
     );
 };

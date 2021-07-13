@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API = axios.create({baseURL: "http://localhost:5000/api"});
+const API = axios.create({baseURL: "https://video-chat-app-imraghav20.herokuapp.com/api"});
 
 API.interceptors.request.use((req) => {
     if(localStorage.getItem("profile")){

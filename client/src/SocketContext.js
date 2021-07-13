@@ -9,8 +9,8 @@ import { addConversation } from './api/index';
 
 const SocketContext = createContext();
 
-// const socket = io('https://video-chat-app-imraghav20.herokuapp.com/');
-const socket = io('http://localhost:5000/');
+const socket = io('https://video-chat-app-imraghav20.herokuapp.com/');
+// const socket = io('http://localhost:5000/');
 
 const ContextProvider = ({ children }) => {
     const [user, setUser] = useState(JSON.parse(localStorage.getItem('profile')));
@@ -27,7 +27,7 @@ const ContextProvider = ({ children }) => {
     const [chatVisibility, setChatVisibility] = useState(false);
     const [callFull, setCallFull] = useState(false);
 
-    const roomId = useRef(window.location.pathname.replace('/video-call/', ''));
+    const roomId = useRef(window.location.hash.replace('#/video-call/', ''));
     const myVideo = useRef();
     const userVideo = useRef();
     const connectionRef = useRef();
@@ -67,6 +67,7 @@ const ContextProvider = ({ children }) => {
             socket.on("callEnded", () => {
                 connectionRef.current = null;
                 setCallEnded(true);
+                setCall({});
                 setCallAccepted(false);
                 setCallJoined(false);
                 setCallStarted(true);

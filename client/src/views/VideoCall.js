@@ -48,7 +48,7 @@ const VideoCall = () => {
 
     useEffect(() => {
         const getMeetName = async () => {
-            const roomId = window.location.pathname.replace('/video-call/', '');
+            const roomId = window.location.hash.replace('#/video-call/', '');
             const chat = await getUserConversation(roomId);
             setMeetingName(chat.data.conversation.conversationName);
         }

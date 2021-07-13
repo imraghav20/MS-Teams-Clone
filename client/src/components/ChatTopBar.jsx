@@ -32,7 +32,7 @@ const ChatTopBar = ({ convoName, chatId }) => {
     }
 
     const redirectToVideo = () => {
-        const win = window.open('/video-call/' + chatId);
+        const win = window.open('/MS-Teams-Clone#/video-call/' + chatId);
         win.focus();
     }
 

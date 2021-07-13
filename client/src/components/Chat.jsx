@@ -63,7 +63,7 @@ const Chat = () => {
 
     useEffect(() => {
         const getMessages = async () => {
-            const chatId = window.location.pathname.replace('/video-call/', '');
+            const chatId = window.location.hash.replace('#/video-call/', '');
             const chat = await getUserConversation(chatId);
             messageRef.current = chat.data.messages;
         }
@@ -89,7 +89,7 @@ const Chat = () => {
 
             dispatch(sendMessage({
                 message: message,
-                convoId: window.location.pathname.replace('/video-call/', '')
+                convoId: window.location.hash.replace('#/video-call/', '')
             }));
 
             setMessage('');
