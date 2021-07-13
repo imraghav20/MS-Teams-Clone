@@ -7,6 +7,7 @@ import CallForm from '../components/CallForm';
 import CallSettings from '../components/CallSettings';
 import Notifications from '../components/Notifications';
 import Chat from '../components/Chat';
+import Participants from '../components/Participants';
 
 import { SocketContext } from '../SocketContext';
 import { getUserConversation } from '../api/index';
@@ -87,6 +88,7 @@ const VideoCall = () => {
                 }
             </Grid>
             <Chat />
+            <Participants />
             <CallSettings />
             <Notifications />
         </div>

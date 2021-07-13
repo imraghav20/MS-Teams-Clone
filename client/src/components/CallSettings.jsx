@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 
 const CallSettings = () => {
     const classes = useStyles();
-    const { callStarted, me, stream, leaveCall, myVideo, videoStream, connectionRef, chatVisibility, setChatVisibility } = useContext(SocketContext);
+    const { callStarted, stream, leaveCall, myVideo, videoStream, connectionRef, chatVisibility, setChatVisibility, participantsVisible, setParticipantsVisible } = useContext(SocketContext);
     const [videoOn, setVideoOn] = useState(true);
     const [audioOn, setAudioOn] = useState(true);
     const [shareScreen, setShareScreen] = useState(false);
@@ -92,6 +92,16 @@ const CallSettings = () => {
         }
 
         setShareScreen(false);
+    }
+
+    const showParticipants = () => {
+        setParticipantsVisible(!participantsVisible);
+        setChatVisibility(false);
+    }
+
+    const showChats = () => {
+        setChatVisibility(!chatVisibility);
+        setParticipantsVisible(false);
     }
 
     return (
@@ -168,12 +178,12 @@ const CallSettings = () => {
                                     </IconButton>
                                 </Tooltip>
                                 <Tooltip title='Show Conversation'>
-                                    <IconButton onClick={() => { setChatVisibility(!chatVisibility); }}>
+                                    <IconButton onClick={() => { showChats() }}>
                                         <Chat fontSize="large" style={{ fill: "white" }} />
                                     </IconButton>
                                 </Tooltip>
                                 <Tooltip title='Show Participants'>
-                                    <IconButton>
+                                    <IconButton onClick={() => { showParticipants() }}>
                                         <People fontSize="large" style={{ fill: "white" }} />
                                     </IconButton>
                                 </Tooltip>

@@ -25,6 +25,7 @@ const ContextProvider = ({ children }) => {
     const [callEnded, setCallEnded] = useState(false);
     const [name, setName] = useState('');
     const [chatVisibility, setChatVisibility] = useState(false);
+    const [participantsVisible, setParticipantsVisible] = useState(false);
     const [callFull, setCallFull] = useState(false);
 
     const roomId = useRef(window.location.hash.replace('#/video-call/', ''));
@@ -32,6 +33,7 @@ const ContextProvider = ({ children }) => {
     const userVideo = useRef();
     const connectionRef = useRef();
     const messageRef = useRef([]);
+    const participantsRef = useRef([]);
     const audio = useRef(new Audio(sound));
 
     const location = useLocation();
@@ -53,6 +55,7 @@ const ContextProvider = ({ children }) => {
                 });
             
             setName(user.result.name);
+            participantsRef.current.push(user.result.name);
 
             const res = addConversation(roomId.current);
 
@@ -66,6 +69,9 @@ const ContextProvider = ({ children }) => {
 
             socket.on("callEnded", () => {
                 connectionRef.current = null;
+                if(participantsRef.current.length > 1){
+                    participantsRef.current.splice(1, 1);
+                }
                 setCallEnded(true);
                 setCall({});
                 setCallAccepted(false);
@@ -115,6 +121,7 @@ const ContextProvider = ({ children }) => {
             messageRef.current.push(
                 { text: call.name + " joined the chat." }
             );
+            participantsRef.current.push(call.name);
             audio.current.play();
         });
 
@@ -161,6 +168,7 @@ const ContextProvider = ({ children }) => {
             const hostName = data.name;
             const from = data.from;
             setCall({ isReceivedCall: false, from, name: hostName, signal });
+            participantsRef.current.push(hostName);
             peer.signal(data.signal);
         });
 
@@ -190,10 +198,13 @@ const ContextProvider = ({ children }) => {
             userVideo,
             connectionRef,
             messageRef,
+            participantsRef,
             stream,
             videoStream,
             chatVisibility,
             setChatVisibility,
+            participantsVisible,
+            setParticipantsVisible,
             name,
             setName,
             callEnded,
