@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { Avatar, Paper } from '@material-ui/core';
+import PanToolIcon from '@material-ui/icons/PanTool';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { SocketContext } from '../SocketContext';
@@ -32,8 +33,9 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         alignItems: 'center',
         paddingLeft: '12px',
+        paddingRight: '12px',
         fontFamily: 'sans-serif'
-    }
+    },
 }))
 
 const Participants = () => {
@@ -47,10 +49,13 @@ const Participants = () => {
                 participantsVisible && (
                     <Paper className={classes.paper}>
                         {
-                            participantsRef.current.map((name) => (
+                            participantsRef.current.map((p) => (
                                 <div className={classes.participant}>
-                                    <Avatar className={classes.purple} >{name.charAt(0)}</Avatar>
-                                    <p className={classes.userName} >{name}</p>
+                                    <Avatar className={classes.purple} >{p.name.charAt(0)}</Avatar>
+                                    <p className={classes.userName} >{p.name}</p>
+                                    {
+                                        p.handRaised ? <PanToolIcon fontSize="large" /> : <div></div>
+                                    }
                                 </div>
                             ))
                         }

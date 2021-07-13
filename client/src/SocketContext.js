@@ -27,6 +27,7 @@ const ContextProvider = ({ children }) => {
     const [name, setName] = useState('');  // name of current user
     const [chatVisibility, setChatVisibility] = useState(false);  // is chat visible
     const [participantsVisible, setParticipantsVisible] = useState(false);  // are all participant names visible
+    const [handRaised, setHandRaised] = useState(false);  // if the user has raised the hand or not
     const [callFull, setCallFull] = useState(false);  // track if chat has reached it capacity (i.e. 2)
 
     const roomId = useRef(window.location.hash.replace('#/video-call/', ''));  // store current room Id
@@ -58,7 +59,7 @@ const ContextProvider = ({ children }) => {
                 });
 
             setName(user.result.name);
-            participantsRef.current.push(user.result.name);
+            participantsRef.current.push({ name: user.result.name, handRaised: false });
 
             addConversation(roomId.current);  // adding the conversationID of this room to the user's database 
             // if not already present using the API
@@ -70,6 +71,24 @@ const ContextProvider = ({ children }) => {
             // on receiving a call
             socket.on('callUser', ({ from, name: callerName, signal }) => {
                 setCall({ isReceivedCall: true, from, name: callerName, signal });
+            });
+
+            // when other user raises hand
+            socket.on("hand-raised", () => {
+                if (participantsRef.current.length > 1) {
+                    participantsRef.current[1].handRaised = true;
+                }
+                setParticipantsVisible(false);
+                setParticipantsVisible(true);
+            });
+
+            // when other user lowers hand
+            socket.on("hand-lowered", () => {
+                if (participantsRef.current.length > 1) {
+                    participantsRef.current[1].handRaised = false;
+                }
+                setParticipantsVisible(false);
+                setParticipantsVisible(true);
             });
 
             // when call is ended by other user
@@ -131,7 +150,9 @@ const ContextProvider = ({ children }) => {
             messageRef.current.push(
                 { text: call.name + " joined the chat." }
             );
-            participantsRef.current.push(call.name);
+            participantsRef.current.push({ name: call.name, handRaised: false });
+            setParticipantsVisible(false);
+            setParticipantsVisible(true);
             audio.current.play();
         });
 
@@ -185,12 +206,26 @@ const ContextProvider = ({ children }) => {
             const hostName = data.name;
             const from = data.from;
             setCall({ isReceivedCall: false, from, name: hostName, signal });
-            participantsRef.current.push(hostName);
+            participantsRef.current.push({ name: hostName, handRaised: false });
+            setParticipantsVisible(false);
+            setParticipantsVisible(true);
             peer.signal(data.signal);
         });
 
         connectionRef.current = peer;
     };
+
+    // when user raises hand
+    const handleHand = (handState) => {
+        participantsRef.current[0].handRaised = handState;
+
+        if (handState) {
+            socket.emit("hand-raised", roomId.current);
+        }
+        else {
+            socket.emit("hand-lowered", roomId.current);
+        }
+    }
 
     // ending the call
     const leaveCall = () => {
@@ -224,6 +259,9 @@ const ContextProvider = ({ children }) => {
             setChatVisibility,
             participantsVisible,
             setParticipantsVisible,
+            handleHand,
+            setHandRaised,
+            handRaised,
             name,
             setName,
             callEnded,

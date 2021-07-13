@@ -38,12 +38,11 @@ const useStyles = makeStyles((theme) => ({
 
 const CallSettings = () => {
     const classes = useStyles();
-    const { callStarted, stream, leaveCall, myVideo, videoStream, connectionRef, chatVisibility, setChatVisibility, participantsVisible, setParticipantsVisible } = useContext(SocketContext);
+    const { callStarted, stream, leaveCall, myVideo, videoStream, connectionRef, chatVisibility, setChatVisibility, participantsVisible, setParticipantsVisible, handleHand, handRaised, setHandRaised } = useContext(SocketContext);
     const [videoOn, setVideoOn] = useState(true);
     const [audioOn, setAudioOn] = useState(true);
     const [shareScreen, setShareScreen] = useState(false);
     const [shareStream, setShareStream] = useState(null);  // to keep track of screen sharing stream
-    const [handRaised, setHandRaised] = useState(false);
 
     // turn off camera
     const offCamera = () => {
@@ -102,10 +101,6 @@ const CallSettings = () => {
         }
 
         setShareScreen(false);
-    }
-
-    const handleHand = () => {
-        setHandRaised(!handRaised);
     }
 
     const showParticipants = () => {
@@ -189,7 +184,7 @@ const CallSettings = () => {
                                 {
                                     !handRaised && (
                                         <Tooltip title='Raise Hand'>
-                                            <IconButton onClick={() => handleHand()}>
+                                            <IconButton onClick={() => {setHandRaised(true); handleHand(true);}}>
                                                 <PanToolOutlinedIcon fontSize="large" style={{ fill: "white" }} />
                                             </IconButton>
                                         </Tooltip>
@@ -198,7 +193,7 @@ const CallSettings = () => {
                                 {
                                     handRaised && (
                                         <Tooltip title='Lower Hand'>
-                                            <IconButton onClick={() => handleHand()}>
+                                            <IconButton onClick={() => {setHandRaised(false); handleHand(false);}}>
                                                 <PanTool fontSize="large" style={{ fill: "white" }} />
                                             </IconButton>
                                         </Tooltip>

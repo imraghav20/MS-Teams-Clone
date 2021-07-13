@@ -14,7 +14,7 @@ const messageRoute = require('./routes/message');
 dotenv.config();
 
 // connecting database to server
-mongoose.connect(process.env.MONGO_URL, {useNewUrlParser: true, useUnifiedTopology: true}, () => {
+mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true }, () => {
     console.log("Connected to Mongo DB.");
 });
 
@@ -54,21 +54,21 @@ io.on("connection", (socket) => {
 
     // check number of users already in room before user asks to join
     socket.on("user-wants-to-join", (roomId) => {
-        if(rooms[roomId]){
+        if (rooms[roomId]) {
             socket.emit("join-response", rooms[roomId].length);
         }
-        else{
+        else {
             socket.emit("join-response", 0);
         }
     });
 
     // add user socket id to corresponding room
-    socket.on("user-joined", ({roomId, userId}) => {
+    socket.on("user-joined", ({ roomId, userId }) => {
         userRoomPairs[userId] = roomId;
-        if(rooms[roomId]){
+        if (rooms[roomId]) {
             rooms[roomId].push(userId);
         }
-        else{
+        else {
             rooms[roomId] = [userId];
         }
     });
@@ -82,15 +82,15 @@ io.on("connection", (socket) => {
     // when user disconnects from web socket
     socket.on("disconnect", () => {
         const room = userRoomPairs[socket.id]
-        if(rooms[room]){
+        if (rooms[room]) {
             const index = rooms[room].indexOf(socket.id);
-            if(index !== -1){
+            if (index !== -1) {
                 rooms[room].splice(index, 1);
             }
             delete userRoomPairs[socket.id];
         }
 
-        if(rooms[room]){
+        if (rooms[room]) {
             io.to(rooms[room][0]).emit("callEnded");
         }
     });
@@ -105,6 +105,22 @@ io.on("connection", (socket) => {
         const signal = data.signal;
         const hostName = data.from;
         io.to(data.to).emit("callAccepted", { signal, name: hostName, from: data.to });
+    });
+
+    // when a user raises hand
+    socket.on("hand-raised", (roomId) => {
+        if (rooms[roomId].length > 1) {
+            const otherUser = rooms[roomId].find(id => id != socket.id);
+            io.to(otherUser).emit("hand-raised");
+        }
+    });
+
+    // when a user lowers hand
+    socket.on("hand-lowered", (roomId) => {
+        if (rooms[roomId].length > 1) {
+            const otherUser = rooms[roomId].find(id => id != socket.id);
+            io.to(otherUser).emit("hand-lowered");
+        }
     });
 })
 
