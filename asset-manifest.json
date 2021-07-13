@@ -1,22 +1,22 @@
 {
   "files": {
     "main.css": "/MS-Teams-Clone/static/css/main.5c6932ca.chunk.css",
-    "main.js": "/MS-Teams-Clone/static/js/main.3b5b7b16.chunk.js",
-    "main.js.map": "/MS-Teams-Clone/static/js/main.3b5b7b16.chunk.js.map",
+    "main.js": "/MS-Teams-Clone/static/js/main.3f809538.chunk.js",
+    "main.js.map": "/MS-Teams-Clone/static/js/main.3f809538.chunk.js.map",
     "runtime-main.js": "/MS-Teams-Clone/static/js/runtime-main.de02c46c.js",
     "runtime-main.js.map": "/MS-Teams-Clone/static/js/runtime-main.de02c46c.js.map",
-    "static/js/2.e8558208.chunk.js": "/MS-Teams-Clone/static/js/2.e8558208.chunk.js",
-    "static/js/2.e8558208.chunk.js.map": "/MS-Teams-Clone/static/js/2.e8558208.chunk.js.map",
+    "static/js/2.aed62cbc.chunk.js": "/MS-Teams-Clone/static/js/2.aed62cbc.chunk.js",
+    "static/js/2.aed62cbc.chunk.js.map": "/MS-Teams-Clone/static/js/2.aed62cbc.chunk.js.map",
     "index.html": "/MS-Teams-Clone/index.html",
     "static/css/main.5c6932ca.chunk.css.map": "/MS-Teams-Clone/static/css/main.5c6932ca.chunk.css.map",
-    "static/js/2.e8558208.chunk.js.LICENSE.txt": "/MS-Teams-Clone/static/js/2.e8558208.chunk.js.LICENSE.txt",
+    "static/js/2.aed62cbc.chunk.js.LICENSE.txt": "/MS-Teams-Clone/static/js/2.aed62cbc.chunk.js.LICENSE.txt",
     "static/media/chat_icon.f223e380.png": "/MS-Teams-Clone/static/media/chat_icon.f223e380.png",
     "static/media/ding.70168eef.mp3": "/MS-Teams-Clone/static/media/ding.70168eef.mp3"
   },
   "entrypoints": [
     "static/js/runtime-main.de02c46c.js",
-    "static/js/2.e8558208.chunk.js",
+    "static/js/2.aed62cbc.chunk.js",
     "static/css/main.5c6932ca.chunk.css",
-    "static/js/main.3b5b7b16.chunk.js"
+    "static/js/main.3f809538.chunk.js"
   ]
 }
