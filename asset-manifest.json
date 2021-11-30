@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/MS-Teams-Clone/static/css/main.5c6932ca.chunk.css",
-    "main.js": "/MS-Teams-Clone/static/js/main.a54c9c90.chunk.js",
-    "main.js.map": "/MS-Teams-Clone/static/js/main.a54c9c90.chunk.js.map",
+    "main.js": "/MS-Teams-Clone/static/js/main.1ee8220e.chunk.js",
+    "main.js.map": "/MS-Teams-Clone/static/js/main.1ee8220e.chunk.js.map",
     "runtime-main.js": "/MS-Teams-Clone/static/js/runtime-main.de02c46c.js",
     "runtime-main.js.map": "/MS-Teams-Clone/static/js/runtime-main.de02c46c.js.map",
     "static/js/2.c6e8f429.chunk.js": "/MS-Teams-Clone/static/js/2.c6e8f429.chunk.js",
@@ -11,12 +11,13 @@
     "static/css/main.5c6932ca.chunk.css.map": "/MS-Teams-Clone/static/css/main.5c6932ca.chunk.css.map",
     "static/js/2.c6e8f429.chunk.js.LICENSE.txt": "/MS-Teams-Clone/static/js/2.c6e8f429.chunk.js.LICENSE.txt",
     "static/media/chat_icon.f223e380.png": "/MS-Teams-Clone/static/media/chat_icon.f223e380.png",
-    "static/media/ding.70168eef.mp3": "/MS-Teams-Clone/static/media/ding.70168eef.mp3"
+    "static/media/ding.70168eef.mp3": "/MS-Teams-Clone/static/media/ding.70168eef.mp3",
+    "static/media/ms_teams_logo_white.e18990d3.png": "/MS-Teams-Clone/static/media/ms_teams_logo_white.e18990d3.png"
   },
   "entrypoints": [
     "static/js/runtime-main.de02c46c.js",
     "static/js/2.c6e8f429.chunk.js",
     "static/css/main.5c6932ca.chunk.css",
-    "static/js/main.a54c9c90.chunk.js"
+    "static/js/main.1ee8220e.chunk.js"
   ]
 }
