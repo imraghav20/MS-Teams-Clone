@@ -14,7 +14,7 @@ const messageRoute = require('./routes/message');
 dotenv.config();
 
 // connecting database to server
-mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true }, () => {
+mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true }, () => {
     console.log("Connected to Mongo DB.");
 });
 

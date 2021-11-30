@@ -67,7 +67,7 @@ const TopBar = () => {
                     <Grid item xs={12} md={6}>
                         <div className={classes.brand}>
                             <img src={ms_teams_logo_white} alt="icon" height="60" />
-                            <Typography variant="h6" fontFamily="Open Sans">Microsoft Teams Clone</Typography>
+                            <Typography variant="h6" fontFamily="Open Sans">Let's Connect</Typography>
                         </div>
                     </Grid>
                     <Grid item xs={12} md={6}>
